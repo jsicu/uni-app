@@ -1,0 +1,166 @@
+<!-- 
+/**
+ * @Author: 林中奇
+ * @Date: 2020-10-23 17:25:03
+ * @lastAuthor:
+ * @lastChangeDate:
+ * @Explain: 表单元素公共组件
+ * @ChildComponents:
+ */ -->
+<template>
+	<div class="form-item" style="">
+		<div style="margin-bottom: 6px;">
+			<label :for="labelFor" v-if="label" :style="labelStyle" :class="{ 'label-required': isRequired }" class="label-style">
+				{{ label }}
+			</label>
+			<div :style="{'margin-left': marginLeft.marginLeft, 'height': '80rpx'}">
+				<slot></slot>
+				<div v-if="isShowMes" class="message">{{ message }}</div>
+			</div>
+		</div>
+	</div>
+</template>
+<script>
+import AsyncValidator from 'async-validator';
+import Emitter from '@/mixins/emitter.js';
+export default {
+	name: 'my-FormItem',
+	mixins: [Emitter],
+	inject: ['form'],
+	props: {
+		label: { type: String, default: '' },
+		prop: { type: String },
+		labelWidth: String
+	},
+	data() {
+		return {
+			isRequired: false,
+			isShowMes: false,
+			message: '',
+			labelFor: 'input' + new Date().valueOf()
+		};
+	},
+	mounted() {
+		console.log(this.form);
+		if (this.prop) {
+			this.dispatch('my-Form', 'form-add', this);
+			// 设置初始值
+			this.initialValue = this.fieldValue;
+			this.setRules();
+		}
+	},
+	// 组件销毁前，将实例从 Form 的缓存中移除
+	beforeDestroy() {
+		this.dispatch('my-Form', 'form-remove', this);
+	},
+	computed: {
+		fieldValue() {
+			return this.form.model[this.prop];
+		},
+		labelStyle() {
+			const ret = {};
+			// if (this.form.labelPosition === 'top') return ret;
+			const labelWidth = this.labelWidth || this.form.labelWidth;
+			if (labelWidth) {
+				ret.width = labelWidth;
+			}
+			return ret;
+		},
+		marginLeft() {
+			const ret = {};
+			// if (this.form.labelPosition === 'top') return ret;
+			const labelWidth = this.labelWidth || this.form.labelWidth;
+			if (labelWidth) {
+				ret.marginLeft = labelWidth;
+			}
+			console.log(ret)
+			return ret;
+		}
+			
+	},
+	methods: {
+		setRules() {
+			let rules = this.getRules();
+			if (rules.length) {
+				rules.forEach(rule => {
+					if (rule.required !== undefined) this.isRequired = rule.required;
+				});
+			}
+			this.$on('form-blur', this.onFieldBlur);
+			this.$on('form-change', this.onFieldChange);
+		},
+		getRules() {
+			let formRules = this.form.rules;
+			formRules = formRules ? formRules[this.prop] : [];
+			return formRules;
+		},
+		// 过滤出符合要求的 rule 规则
+		getFilteredRule(trigger) {
+			const rules = this.getRules();
+			return rules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1);
+		},
+		/**
+		 * 校验表单数据
+		 * @param trigger 触发校验类型
+		 * @param callback 回调函数
+		 */
+		validate(trigger, cb) {
+			let rules = this.getFilteredRule(trigger);
+			if (!rules || rules.length === 0) return true;
+			// 使用 async-validator
+			const validator = new AsyncValidator({ [this.prop]: rules });
+			let model = { [this.prop]: this.fieldValue };
+			validator.validate(model, { firstFields: true }, errors => {
+				this.isShowMes = errors ? true : false;
+				this.message = errors ? errors[0].message : '';
+				if (cb) cb(this.message);
+			});
+		},
+		resetField() {
+			this.message = '';
+			this.form.model[this.prop] = this.initialValue;
+		},
+		onFieldBlur() {
+			this.validate('blur');
+		},
+		onFieldChange() {
+			this.validate('change');
+		}
+	}
+};
+</script>
+<style lang="less" scoped>
+.form-item {
+	.label-style {
+		text-align: right;
+		vertical-align: middle;
+		float: left;
+		font-size: 14px;
+		color: #606266;
+		line-height: 60rpx;
+		padding: 0 12px 0 0;
+		box-sizing: border-box;
+	}
+	/deep/ uni-input {
+		float: right;
+		font-size: 14px;
+		color: #606266;
+		line-height: 60rpx;
+		height: 60rpx;
+		padding: 0 12px 0 0;
+		box-sizing: border-box;
+	}
+	.message {
+		color: #f56c6c;
+		font-size: 12px;
+		line-height: 1;
+		padding-top: 60rpx;
+		position: absolute;
+	}
+}
+
+.label-required:before {
+	content: '*';
+	color: red;
+}
+</style>

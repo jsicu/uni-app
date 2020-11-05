@@ -3,9 +3,9 @@
 	<view class="content">
 		<image class="logo" src="/static/logo.png"></image>
 		<view class="text-area"><text class="title">hello world</text></view>
-		<my-Form ref="form" :model="formData" :rules="rules" label-width="160rpx">
+		<my-Form ref="form" :model="formData" :rules="rules" label-width="120rpx" style="width: 500rpx;">
 			<my-FormItem label="名称:" prop="name">
-				<input type="text" v-model="formData.name" placeholder="请输入用户名" />
+				<my-Input type="text" v-model="formData.name" placeholder="请输入用户名" />
 			</my-FormItem>
 			<my-FormItem label="邮箱:" prop="mail"><input type="text" v-model="formData.mail" placeholder="请输入密码" /></my-FormItem>
 			<button @click="handleSubmit">提交</button>

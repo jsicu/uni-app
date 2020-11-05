@@ -10,10 +10,17 @@
 <template>
 	<div class="form-item" style="">
 		<div style="margin-bottom: 6px;">
-			<label :for="labelFor" v-if="label" :style="labelStyle" :class="{ 'label-required': isRequired }" class="label-style">
+			<label
+				:for="labelFor"
+				v-if="label"
+				:style="labelStyle"
+				style="font-weight: 600;"
+				:class="{ 'label-required': isRequired }"
+				class="label-style"
+			>
 				{{ label }}
 			</label>
-			<div :style="{'margin-left': marginLeft.marginLeft, 'height': '80rpx'}">
+			<div :style="{ 'margin-left': marginLeft.marginLeft, height: '80rpx' }">
 				<slot></slot>
 				<div v-if="isShowMes" class="message">{{ message }}</div>
 			</div>
@@ -23,10 +30,13 @@
 <script>
 import AsyncValidator from 'async-validator';
 import Emitter from '@/mixins/emitter.js';
+import objectAssign, { noop } from '@/utils/util';
+
 export default {
-	name: 'my-FormItem',
+	name: 'MyFormItem',
+	componentName: 'MyFormItem',
 	mixins: [Emitter],
-	inject: ['form'],
+	inject: ['myForm'],
 	props: {
 		label: { type: String, default: '' },
 		prop: { type: String },
@@ -41,9 +51,8 @@ export default {
 		};
 	},
 	mounted() {
-		console.log(this.form);
 		if (this.prop) {
-			this.dispatch('my-Form', 'form-add', this);
+			this.dispatch('MyForm', 'form-add', this);
 			// 设置初始值
 			this.initialValue = this.fieldValue;
 			this.setRules();
@@ -51,7 +60,7 @@ export default {
 	},
 	// 组件销毁前，将实例从 Form 的缓存中移除
 	beforeDestroy() {
-		this.dispatch('my-Form', 'form-remove', this);
+		this.dispatch('MyForm', 'form-remove', this);
 	},
 	computed: {
 		fieldValue() {
@@ -73,10 +82,21 @@ export default {
 			if (labelWidth) {
 				ret.marginLeft = labelWidth;
 			}
-			console.log(ret)
 			return ret;
+		},
+		form() {
+			let parent = this.$parent;
+			let parentName = parent.$options.componentName;
+			while (parentName !== 'MyForm') {
+				// if (parentName === 'MyFormItem') {
+				// 	this.isNested = true;
+				// }
+				parent = parent.$parent;
+				parentName = parent.$options.componentName;
+			}
+			console.log(parent)
+			return parent;
 		}
-			
 	},
 	methods: {
 		setRules() {
@@ -97,23 +117,39 @@ export default {
 		// 过滤出符合要求的 rule 规则
 		getFilteredRule(trigger) {
 			const rules = this.getRules();
-			return rules.filter(rule => !rule.trigger || rule.trigger.indexOf(trigger) !== -1);
+
+			return rules
+				.filter(rule => {
+					if (!rule.trigger || trigger === '') return true;
+					if (Array.isArray(rule.trigger)) {
+						return rule.trigger.indexOf(trigger) > -1;
+					} else {
+						return rule.trigger === trigger;
+					}
+				})
+				.map(rule => objectAssign({}, rule));
 		},
 		/**
 		 * 校验表单数据
 		 * @param trigger 触发校验类型
 		 * @param callback 回调函数
 		 */
-		validate(trigger, cb) {
+		validate(trigger, callback = noop) {
 			let rules = this.getFilteredRule(trigger);
 			if (!rules || rules.length === 0) return true;
 			// 使用 async-validator
 			const validator = new AsyncValidator({ [this.prop]: rules });
 			let model = { [this.prop]: this.fieldValue };
+			// validator.validate(model, { firstFields: true }, errors => {
+			// 	this.isShowMes = errors ? true : false;
+			// 	this.message = errors ? errors[0].message : '';
+			// 	if (callback) callback(this.message);
+			// });
 			validator.validate(model, { firstFields: true }, errors => {
 				this.isShowMes = errors ? true : false;
 				this.message = errors ? errors[0].message : '';
-				if (cb) cb(this.message);
+				if (callback) callback(this.message);
+				this.elForm && this.elForm.$emit('validate', this.prop, !errors, this.message || null);
 			});
 		},
 		resetField() {
@@ -142,7 +178,7 @@ export default {
 		box-sizing: border-box;
 	}
 	/deep/ uni-input {
-		float: right;
+		// float: right;
 		font-size: 14px;
 		color: #606266;
 		line-height: 60rpx;
@@ -154,7 +190,7 @@ export default {
 		color: #f56c6c;
 		font-size: 12px;
 		line-height: 1;
-		padding-top: 60rpx;
+		// padding-top: 60rpx;
 		position: absolute;
 	}
 }

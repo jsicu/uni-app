@@ -10,16 +10,7 @@
 <template>
 	<div class="form-item" style="">
 		<div style="margin-bottom: 6px;">
-			<label
-				:for="labelFor"
-				v-if="label"
-				:style="labelStyle"
-				style="font-weight: 600;"
-				:class="{ 'label-required': isRequired }"
-				class="label-style"
-			>
-				{{ label }}
-			</label>
+			<label :for="labelFor" v-if="label" :style="labelStyle" style="font-weight: 600;" :class="{ 'label-required': isRequired }" class="label-style">{{ label }}</label>
 			<div :style="{ 'margin-left': marginLeft.marginLeft, height: '80rpx' }">
 				<slot></slot>
 				<div v-if="isShowMes" class="message">{{ message }}</div>
@@ -30,7 +21,7 @@
 <script>
 import AsyncValidator from 'async-validator';
 import Emitter from '@/mixins/emitter.js';
-import objectAssign, { noop } from '@/utils/util';
+import objectAssign, { noop, getPropByPath } from '@/utils/util';
 
 export default {
 	name: 'MyFormItem',
@@ -58,14 +49,18 @@ export default {
 			this.setRules();
 		}
 	},
+	created() {
+		this.$on('form-blur', this.onFieldBlur);
+		this.$on('form-change', this.onFieldChange);
+	},
 	// 组件销毁前，将实例从 Form 的缓存中移除
 	beforeDestroy() {
 		this.dispatch('MyForm', 'form-remove', this);
 	},
 	computed: {
-		fieldValue() {
-			return this.form.model[this.prop];
-		},
+		// fieldValue() {
+		// 	return this.form.model[this.prop];
+		// },
 		labelStyle() {
 			const ret = {};
 			// if (this.form.labelPosition === 'top') return ret;
@@ -94,8 +89,20 @@ export default {
 				parent = parent.$parent;
 				parentName = parent.$options.componentName;
 			}
-			console.log(parent)
 			return parent;
+		},
+		fieldValue() {
+			const model = this.form.model;
+			if (!model || !this.prop) {
+				return;
+			}
+
+			let path = this.prop;
+			if (path.indexOf(':') !== -1) {
+				path = path.replace(/:/, '.');
+			}
+			console.log(getPropByPath(model, path, true).v)
+			return getPropByPath(model, path, true).v;
 		}
 	},
 	methods: {
@@ -135,11 +142,14 @@ export default {
 		 * @param callback 回调函数
 		 */
 		validate(trigger, callback = noop) {
+			console.log('sdsad')
+			// debugger
 			let rules = this.getFilteredRule(trigger);
 			if (!rules || rules.length === 0) return true;
 			// 使用 async-validator
 			const validator = new AsyncValidator({ [this.prop]: rules });
 			let model = { [this.prop]: this.fieldValue };
+			console.log(model)
 			// validator.validate(model, { firstFields: true }, errors => {
 			// 	this.isShowMes = errors ? true : false;
 			// 	this.message = errors ? errors[0].message : '';

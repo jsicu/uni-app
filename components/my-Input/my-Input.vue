@@ -8,45 +8,91 @@
  * @ChildComponents:
  */ -->
 <template>
-  <div class=''>
-		<input class="uni-input" focus placeholder="自动获得焦点" />
+	<div>
+		<input
+			:value="value"
+			class="uni-input"
+			v-bind="$attrs"
+			ref="input"
+			@focus="handleFocus"
+			@blur="handleBlur"
+			@input="handleInput"
+			@change="handleChange"
+		/>
 	</div>
 </template>
 
 <script>
+import emitter from '@/mixins/emitter.js';
 export default {
-  name: 'MyInput',
-	
+	name: 'MyInput',
+
 	componentName: 'MyInput',
-	
-  components: {},
-  data() {
-    return {
-
-    };
-  },
-  //监听属性 类似于data概念
-  computed: {},
-  watch: {},
-  //方法集合
-  methods: {
-
-  },
-  created() {
-
-  },
-  mounted() {
-
-  },
-  beforeCreate() {},
-  beforeMount() {},
-  beforeUpdate() {}, 
-  updated() {},
-  beforeDestroy() {},
-  destroyed() {},
-}
+	mixins: [emitter],
+	components: {},
+	props: {
+		value: [String, Number]
+	},
+	data() {
+		return {};
+	},
+	//监听属性 类似于data概念
+	computed: {},
+	watch: {
+		value(val) {
+			// console.log(val)
+			// this.$nextTick(this.resizeTextarea);
+			// if (this.validateEvent) {
+			this.dispatch('MyFormItem', 'form-change', [val]);
+			// }
+		},
+		// nativeInputValue() {
+		// 	this.setNativeInputValue();
+		// }
+	},
+	//方法集合
+	methods: {
+		setNativeInputValue() {
+			const input = this.getInput();
+			if (!input) return;
+			if (input.value === this.nativeInputValue) return;
+			input.value = this.nativeInputValue;
+		},
+		getInput() {
+			return this.$refs.input;
+		},
+		handleFocus(event) {
+			// this.focused = false;
+			this.$emit('focus', event);
+		},
+		handleBlur(event) {
+			// this.focused = false;
+			this.$emit('blur', event);
+			// if (this.validateEvent) {
+			this.dispatch('MyFormItem', 'form-blur', [this.value]);
+			// }
+		},
+		handleInput(event) {
+			this.$emit('input', event.target.value);
+		},
+		handleChange(event) {
+			this.$emit('change', event.target.value);
+		}
+	},
+	created() {
+		console.log(this.value);
+	},
+	mounted() {
+		// this.setNativeInputValue();
+	},
+	beforeCreate() {},
+	beforeMount() {},
+	beforeUpdate() {},
+	updated() {},
+	beforeDestroy() {},
+	destroyed() {}
+};
 </script>
-<style lang='less' scoped>
-// @import url(); 
-
+<style lang="less" scoped>
+// @import url();
 </style>

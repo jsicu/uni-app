@@ -26,9 +26,9 @@
 export default {
 	data() {
 		return {
-			formData: { name: '', mail: '' },
+			formData: { name: '23312', mail: '' },
 			rules: {
-				name: [{ required: true, message: '不能为空', trigger: 'blur' }],
+				name: [{ required: true, message: '不能为空' }],
 				mail: [
 					{ required: true, message: '不能为空', trigger: 'blur' },
 					{ type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
@@ -43,7 +43,7 @@ export default {
 			// 	url: '/pages/home/home?id=1&name=uniapp'
 			// });
 			this.$refs.form.validate(valid => {
-				if (valid) console.log('提交成功');
+				if (valid) console.log(this.formData);
 				else console.log('校验失败');
 			});
 		},

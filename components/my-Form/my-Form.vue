@@ -30,7 +30,6 @@ export default {
 	created() {
 		this.$on('form-add', field => {
 			if (field) this.fields.push(field);
-			console.log(this.field)
 		});
 		this.$on('form-remove', field => {
 			if (field.prop) this.fields.splice(this.fields.indexOf(field), 1);

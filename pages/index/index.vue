@@ -8,17 +8,9 @@
 				<my-Input type="text" v-model="formData.name" placeholder="请输入用户名" />
 			</my-FormItem>
 			<my-FormItem label="邮箱:" prop="mail"><input type="text" v-model="formData.mail" placeholder="请输入密码" /></my-FormItem>
-			<button @click="handleSubmit">提交</button>
-			<button @click="handleReset">重置</button>
+			<my-Button @click="handleSubmit">提交</my-Button>
+			<my-Button @click="handleReset">重置</my-Button>
 		</my-Form>
-		<!-- <view>
-			<form @submit="formSubmit" @reset="formReset">
-				<view class="uni-form-item uni-column">
-					<view class="title">input</view>
-					<input class="uni-input" name="input" placeholder="这是一个输入框" />
-				</view>
-			</form>
-		</view> -->
 	</view>
 </template>
 

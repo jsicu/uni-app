@@ -1,6 +1,6 @@
 <!-- 
 /**
- * @Author: 林中奇
+ * @Author: 老林头
  * @Date: 2020-10-23 17:25:03
  * @lastAuthor:
  * @lastChangeDate:
@@ -10,10 +10,29 @@
 <template>
 	<div class="form-item" style="">
 		<div style="margin-bottom: 6px;">
-			<label :for="labelFor" v-if="label" :style="labelStyle" style="font-weight: 600;" :class="{ 'label-required': isRequired }" class="label-style">{{ label }}</label>
+			<label
+				:for="labelFor"
+				v-if="label"
+				:style="labelStyle"
+				style="font-weight: 600;"
+				:class="{ 'label-required': isRequired }"
+				class="label-style"
+			>
+				{{ label }}
+			</label>
 			<div :style="{ 'margin-left': marginLeft.marginLeft, height: '80rpx' }">
 				<slot></slot>
-				<div v-if="isShowMes" class="message">{{ message }}</div>
+				<transition name="el-zoom-in-top">
+					<slot v-if="isShowMes" name="error" :error="validateMessage">
+						<div class="validateMessage">
+							<!-- :class="{
+								'el-form-item__error--inline':
+									typeof inlineMessage === 'boolean' ? inlineMessage : (elForm && elForm.inlineMessage) || false
+							}" -->
+							{{ validateMessage }}
+						</div>
+					</slot>
+				</transition>
 			</div>
 		</div>
 	</div>
@@ -37,7 +56,7 @@ export default {
 		return {
 			isRequired: false,
 			isShowMes: false,
-			message: '',
+			validateMessage: '',
 			labelFor: 'input' + new Date().valueOf()
 		};
 	},
@@ -101,7 +120,7 @@ export default {
 			if (path.indexOf(':') !== -1) {
 				path = path.replace(/:/, '.');
 			}
-			console.log(getPropByPath(model, path, true).v)
+			console.log(getPropByPath(model, path, true).v);
 			return getPropByPath(model, path, true).v;
 		}
 	},
@@ -142,28 +161,20 @@ export default {
 		 * @param callback 回调函数
 		 */
 		validate(trigger, callback = noop) {
-			console.log('sdsad')
-			// debugger
 			let rules = this.getFilteredRule(trigger);
 			if (!rules || rules.length === 0) return true;
 			// 使用 async-validator
 			const validator = new AsyncValidator({ [this.prop]: rules });
 			let model = { [this.prop]: this.fieldValue };
-			console.log(model)
-			// validator.validate(model, { firstFields: true }, errors => {
-			// 	this.isShowMes = errors ? true : false;
-			// 	this.message = errors ? errors[0].message : '';
-			// 	if (callback) callback(this.message);
-			// });
 			validator.validate(model, { firstFields: true }, errors => {
 				this.isShowMes = errors ? true : false;
-				this.message = errors ? errors[0].message : '';
-				if (callback) callback(this.message);
-				this.elForm && this.elForm.$emit('validate', this.prop, !errors, this.message || null);
+				this.validateMessage = errors ? errors[0].message : '';
+				if (callback) callback(this.validateMessage);
+				this.elForm && this.elForm.$emit('validate', this.prop, !errors, this.validateMessage || null);
 			});
 		},
 		resetField() {
-			this.message = '';
+			this.validateMessage = '';
 			this.form.model[this.prop] = this.initialValue;
 		},
 		onFieldBlur() {
@@ -196,7 +207,7 @@ export default {
 		padding: 0 12px 0 0;
 		box-sizing: border-box;
 	}
-	.message {
+	.validateMessage {
 		color: #f56c6c;
 		font-size: 12px;
 		line-height: 1;

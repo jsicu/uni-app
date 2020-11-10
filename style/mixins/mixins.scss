@@ -1,0 +1,13 @@
+@import "config";
+
+
+
+/* button(按钮样式)
+ -------------------------- */
+@mixin b($block) {
+  $B: $namespace+'-'+$block !global;
+
+  .#{$B} {
+    @content;
+  }
+}

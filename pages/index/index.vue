@@ -8,7 +8,7 @@
 				<my-Input type="text" v-model="formData.name" placeholder="请输入用户名" />
 			</my-FormItem>
 			<my-FormItem label="邮箱:" prop="mail"><input type="text" v-model="formData.mail" placeholder="请输入密码" /></my-FormItem>
-			<my-Button @click="handleSubmit">提交</my-Button>
+			<my-Button @click="handleSubmit" type="danger" class="el-icon-watch">提交</my-Button>
 			<my-Button @click="handleReset">重置</my-Button>
 		</my-Form>
 	</view>
@@ -46,7 +46,10 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+	/deep/ .el-button{
+		// padding: 12rpx 24rpx;
+	}
 .content {
 	display: flex;
 	flex-direction: column;

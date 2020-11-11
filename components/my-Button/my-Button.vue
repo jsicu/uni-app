@@ -68,13 +68,13 @@
 
     computed: {
       _elFormItemSize() {
-        return (this.elFormItem || {}).elFormItemSize;
+        return (this.myFormItem || {}).myFormItemSize;
       },
       buttonSize() {
-        return this.size || this._elFormItemSize || (this.$ELEMENT || {}).size;
+        return this.size || this._myFormItemSize || (this.$ELEMENT || {}).size;
       },
       buttonDisabled() {
-        return this.disabled || (this.elForm || {}).disabled;
+        return this.disabled || (this.myForm || {}).disabled;
       }
     },
 

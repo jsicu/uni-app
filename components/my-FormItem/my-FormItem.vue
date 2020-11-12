@@ -120,7 +120,6 @@ export default {
 			if (path.indexOf(':') !== -1) {
 				path = path.replace(/:/, '.');
 			}
-			console.log(getPropByPath(model, path, true).v);
 			return getPropByPath(model, path, true).v;
 		}
 	},

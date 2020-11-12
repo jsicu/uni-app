@@ -1,5 +1,7 @@
-@import "./common/transition.scss";
-@import "./uni.scss";
+@import 'common.scss';
 
-@import "./button.scss";
-@import "./icon.scss";
+@import "common/transition.scss";
+@import "common/uni.scss";
+
+@import "components/button.scss";
+@import "components/icon.scss";

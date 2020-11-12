@@ -1,8 +1,8 @@
 @charset "UTF-8";
-@import 'common/var';
-@import 'mixins/_button.scss';
-@import 'mixins/mixins';
-@import 'mixins/utils';
+@import '../common/var';
+@import '../mixins/_button.scss';
+@import '../mixins/mixins';
+@import '../mixins/utils';
 
 @include b(button) {
 	display: inline-block;
@@ -47,6 +47,23 @@
 		border-radius: 50%;
 		padding: $--button-padding-vertical;
 	}
+	// 加载中图标与其他图标不可同时显示
+	@include when(loading) {
+		position: relative;
+		pointer-events: none;
+
+		&:before {
+			pointer-events: none;
+			content: '';
+			position: absolute;
+			left: -1px;
+			top: -1px;
+			right: -1px;
+			bottom: -1px;
+			border-radius: inherit;
+			background-color: rgba(255, 255, 255, 0.35);
+		}
+	}
 	@include when(disabled) {
 		&,
 		&:hover,
@@ -84,5 +101,69 @@
 	}
 	@include m(info) {
 		@include button-variant($--button-info-font-color, $--button-info-background-color, $--button-info-border-color);
+	}
+	// 按钮尺寸
+	@include m(medium) {
+		@include button-size(
+			$--button-medium-padding-vertical,
+			$--button-medium-padding-horizontal,
+			$--button-medium-font-size,
+			$--button-medium-border-radius
+		);
+		@include when(circle) {
+			padding: $--button-medium-padding-vertical;
+		}
+	}
+	@include m(small) {
+		@include button-size(
+			$--button-small-padding-vertical,
+			$--button-small-padding-horizontal,
+			$--button-small-font-size,
+			$--button-small-border-radius
+		);
+		@include when(circle) {
+			padding: $--button-small-padding-vertical;
+		}
+	}
+	@include m(mini) {
+		@include button-size(
+			$--button-mini-padding-vertical,
+			$--button-mini-padding-horizontal,
+			$--button-mini-font-size,
+			$--button-mini-border-radius
+		);
+		@include when(circle) {
+			padding: $--button-mini-padding-vertical;
+		}
+	}
+	// 文本按钮
+	@include m(text) {
+		border-color: transparent;
+		color: $--color-primary;
+		background: transparent;
+		padding-left: 0;
+		padding-right: 0;
+
+		&:hover,
+		&:focus {
+			color: mix($--color-white, $--color-primary, $--button-hover-tint-percent);
+			border-color: transparent;
+			background-color: transparent;
+		}
+		&:active {
+			color: mix($--color-black, $--color-primary, $--button-active-shade-percent);
+			border-color: transparent;
+			background-color: transparent;
+		}
+		
+		&:after{
+			border: none;
+		}
+
+		&.is-disabled,
+		&.is-disabled:hover,
+		&.is-disabled:focus {
+			border-color: transparent;
+		}
 	}
 }

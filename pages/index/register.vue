@@ -8,8 +8,8 @@
  * @ChildComponents:
  */ -->
 <template>
-	<view class="content" style="margin-top: 50rpx;">
-		<my-Form ref="form" :model="formData" :rules="rules" label-width="180rpx" style="width: 500rpx;">
+	<view class="content" style="padding-top: 40rpx;">
+		<my-Form ref="form" :model="formData" :rules="rules" label-width="180rpx" style="width: 600rpx;">
 			<my-FormItem label="用户名:" prop="name">
 				<my-Input type="text" v-model="formData.name" placeholder="请输入用户名" />
 			</my-FormItem>
@@ -25,6 +25,18 @@
 				<pic-code ref='code' matchCase />
 				</view>
 			</my-FormItem>
+			<my-FormItem label="电子邮箱:" prop="email">
+				<input type="text" v-model="formData.email" placeholder="请输入电子邮箱" />
+			</my-FormItem>
+			<my-FormItem label="验证码:">
+				<view style="display: inline-flex;">
+				<input type="text" v-model="formData.code" placeholder="请输入验证码" />
+				<my-Button @click="handleSubmit" type="text" size="mini" style="width: 160rpx;">获取验证码</my-Button>
+				</view>
+			</my-FormItem>
+			<my-FormItem label="验证码:">
+				<mySlider @success="()=>{formData.slider = true}" ></mySlider>
+			</my-FormItem>
 			<view style="text-align: center;">
 				<my-Button @click="handleSubmit" type="primary" style="width: 100%;" :loading="loading">登录</my-Button>
 			</view>
@@ -33,14 +45,16 @@
 				<my-Button @click="forgetPwd" type="text" size="mini">忘记密码?</my-Button>
 			</view>
 		</my-Form>
+		<mySlider @success="()=>{formData.slider = true}" style="width: 100%;" ></mySlider>
 	</view>
 </template>
 
 <script>
 	import picCode from '@/components/GraphicCode'
+	import mySlider from '@/components/Slider.vue'
 export default {
 	name: '',
-	components: {picCode},
+	components: {picCode, mySlider},
 	data() {
 		return {
 			loading: false,
@@ -77,4 +91,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 // @import url();
+/deep/ .el-button {
+	// padding: 12rpx 24rpx;
+}
 </style>

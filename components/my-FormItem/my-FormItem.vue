@@ -126,7 +126,7 @@ export default {
 	methods: {
 		setRules() {
 			let rules = this.getRules();
-			if (rules.length) {
+			if (rules?.length) {
 				rules.forEach(rule => {
 					if (rule.required !== undefined) this.isRequired = rule.required;
 				});

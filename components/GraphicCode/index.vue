@@ -110,10 +110,12 @@ export default {
 			if (this.matchCase) {
 				for (let i = 0; i < this.verification.length; i++) {
 					if (code[i] !== this.verification[i]) {
+						this.refresh()
 						return false;
 					}
 				}
 			} else if (code.toLowerCase() !== this.verification.toLowerCase()) {
+				this.refresh()
 				return false;
 			}
 			return true

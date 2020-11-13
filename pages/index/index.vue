@@ -59,9 +59,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .el-button {
-	// padding: 12rpx 24rpx;
-}
 
 .logo {
 	height: 200rpx;

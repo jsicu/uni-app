@@ -20,7 +20,10 @@
 				<input type="text" v-model="formData.confirmPassword" placeholder="请再次输入密码" />
 			</my-FormItem>
 			<my-FormItem label="验证码:">
-				<pic-code v-model="formData.code" />
+				<view style="display: inline-flex;">
+				<input type="text" v-model="formData.code" placeholder="请输入验证码" />
+				<pic-code ref='code' matchCase />
+				</view>
 			</my-FormItem>
 			<view style="text-align: center;">
 				<my-Button @click="handleSubmit" type="primary" style="width: 100%;" :loading="loading">登录</my-Button>
@@ -56,7 +59,12 @@ export default {
 	computed: {},
 	watch: {},
 	//方法集合
-	methods: {},
+	methods: {
+		handleSubmit() {
+		 const code = this.$refs.code.checkCode(this.formData.code)
+		 console.log(code)
+		}
+	},
 	created() {},
 	mounted() {},
 	beforeCreate() {},

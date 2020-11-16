@@ -8,14 +8,14 @@
  * @ChildComponents:
  */ -->
 <template>
-	<view class="slider-border" id="slider">
+	<view class="slider-border" :id="sliderId">
 		<view class="slider-container" :style="{ backgroundColor: sliderBlockBg }">
 			<view style="height: 100%;font-size: 26rpx;color: #000;text-align: center;line-height: 60rpx;">
 				{{ value == 100 ? successText : initText }}
 			</view>
 			<view class="front" :style="{ width: value + '%', backgroundColor: forntBg }"></view>
 			<view
-				id="arrow"
+				:id="arrowId"
 				class="slider-block"
 				:style="{ left: !value ? '0' : `calc(${value}% - ${sliderBlockWidth}rpx)`, width: sliderBlockWidth + 'rpx' }"
 			>
@@ -66,8 +66,8 @@ export default {
 	},
 	data() {
 		return {
-			sliderId: 'slider' + new Date(),
-			arrowId: 'arrow' + new Date(),
+			sliderId: 'slider' + new Date().getTime(),
+			arrowId: 'arrow' + new Date().getTime(),
 			value: 0,
 			disabled: false
 		};
@@ -75,10 +75,10 @@ export default {
 	onLoad() {},
 	methods: {
 		changing(e) {
-			const sliderWidth = document.getElementById('slider').offsetWidth;
-			const arrowWidth = document.getElementById('arrow').offsetWidth; 
-			const left = (arrowWidth / sliderWidth * 100).toFixed(1);
-			console.log(left)
+			const sliderWidth = document.getElementById(this.sliderId).offsetWidth;
+			const arrowWidth = document.getElementById(this.arrowId).offsetWidth;
+			const left = ((arrowWidth / sliderWidth) * 100).toFixed(1);
+			console.log(left);
 			// TODO: 点击滑块前移优化
 			if (e.detail.value < left) {
 				this.value = left;

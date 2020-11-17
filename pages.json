@@ -20,7 +20,12 @@
 				"navigationBarTitleText": "注册",
 				"enablePullDownRefresh": false
 			}
-
+		}, {
+			"path": "pages/index/forgetPwd",
+			"style": {
+				"navigationBarTitleText": "找回密码",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {

@@ -79,9 +79,7 @@ export default {
 			this.$emit('change', event.target.value);
 		}
 	},
-	created() {
-		console.log(this.value);
-	},
+	created() {},
 	mounted() {
 		// this.setNativeInputValue();
 	},

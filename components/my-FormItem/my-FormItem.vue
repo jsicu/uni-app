@@ -50,7 +50,12 @@ export default {
 	props: {
 		label: { type: String, default: '' },
 		prop: { type: String },
-		labelWidth: String
+		labelWidth: String,
+		required: {
+			type: Boolean,
+			default: undefined
+		},
+		rules: [Object, Array]
 	},
 	data() {
 		return {
@@ -136,13 +141,17 @@ export default {
 		},
 		getRules() {
 			let formRules = this.form.rules;
-			formRules = formRules ? formRules[this.prop] : [];
-			return formRules;
+			const selfRules = this.rules;
+			const requiredRule = this.required !== undefined ? { required: !!this.required } : [];
+			
+			const prop = getPropByPath(formRules, this.prop || ''); 
+			formRules = formRules ? prop.o[this.prop || ''] || prop.v : [];
+			// 处理校验规则未添加导致的.filter is undefined报错
+			return [].concat(selfRules || formRules || []).concat(requiredRule);
 		},
 		// 过滤出符合要求的 rule 规则
 		getFilteredRule(trigger) {
 			const rules = this.getRules();
-
 			return rules
 				.filter(rule => {
 					if (!rule.trigger || trigger === '') return true;

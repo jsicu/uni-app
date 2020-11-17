@@ -1,10 +1,10 @@
 <!-- 
 /**
  * @Author: 老林头
- * @Date: 2020-11-12 15:00:16
+ * @Date: 2020-11-16 10:21:50
  * @lastAuthor:
  * @lastChangeDate:
- * @Explain: 注册页面
+ * @Explain: 找回密码
  * @ChildComponents:
  */ -->
 <template>
@@ -33,10 +33,21 @@
 				></mySlider>
 			</my-FormItem>
 			<view style="text-align: center;">
-				<my-Button @click="handleRegister" type="primary" style="width: 100%;" :loading="loading">注册</my-Button>
+				<my-Button @click="handleRegister" type="primary" style="width: 100%;" :loading="loading">确定</my-Button>
 			</view>
-			<my-Button @click="signIn" type="text" size="mini" style="float: right;">已有账号，返回登录</my-Button>
+			<my-Button @click="signIn" type="text" size="mini" style="float: right;">返回登录</my-Button>
 		</my-Form>
+		<!-- <my-Dialog
+		  title="提示"
+		  :visible.sync="dialogVisible"
+		  width="30%"
+		>
+		  <span>这是一段信息</span>
+		  <span slot="footer" class="dialog-footer">
+		    <my-Button @click="dialogVisible = false">取 消</my-Button>
+		    <my-Button type="primary" @click="dialogVisible = false">确 定</my-Button>
+		  </span>
+		</my-Dialog> -->
 	</view>
 </template>
 
@@ -47,6 +58,7 @@ export default {
 	components: { mySlider },
 	data() {
 		return {
+			dialogVisible: false,
 			loading: false,
 			formData: { name: '', password: '' },
 			rules: {
@@ -65,12 +77,11 @@ export default {
 	//方法集合
 	methods: {
 		handleRegister() {
-			const code = this.$refs.code.checkCode(this.formData.code);
-			console.log(code);
-			this.$refs.form.validate(valid => {
-				if (valid) console.log(this.formData);
-				else console.log('校验失败');
-			});
+			this.dialogVisible = true
+			// this.$refs.form.validate(valid => {
+			// 	if (valid) console.log(this.formData);
+			// 	else console.log('校验失败');
+			// });
 		},
 		getVerificationCode() {
 			console.log('获取邮箱验证码');
@@ -93,7 +104,5 @@ export default {
 </script>
 <style lang="scss" scoped>
 // @import url();
-/deep/ .el-button {
-	// padding: 12rpx 24rpx;
-}
+
 </style>

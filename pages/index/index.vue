@@ -14,7 +14,7 @@
 				<!-- <my-Button @click="handleReset" type="text" disabled>重置</my-Button> -->
 			</view>
 			<view style="display: flex;justify-content: space-between;">
-				<my-Button @click="register" type="text" size="mini" >注册</my-Button>
+				<my-Button @click="register" type="text" size="mini">注册</my-Button>
 				<my-Button @click="forgetPwd" type="text" size="mini">忘记密码?</my-Button>
 			</view>
 		</my-Form>
@@ -50,8 +50,15 @@ export default {
 		},
 		register() {
 			this.$refs.form.resetFields();
-			uni.navigateTo({ // navigateTo redirectTo
+			uni.navigateTo({
+				// navigateTo redirectTo
 				url: '/pages/index/register'
+			});
+		},
+		forgetPwd() {
+			uni.navigateTo({
+				// navigateTo redirectTo
+				url: '/pages/index/forgetPwd'
 			});
 		}
 	}
@@ -59,7 +66,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .logo {
 	height: 200rpx;
 	width: 200rpx;

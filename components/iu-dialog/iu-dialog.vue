@@ -9,10 +9,10 @@
  */ -->
 <template>
 	<transition name="dialog-fade" @after-enter="afterEnter" @after-leave="afterLeave">
-		<div v-show="visible" class="el-dialog__wrapper" @click.self="handleWrapperClick">
+		<div v-show="visible" class="iu-dialog__wrapper" @click.self="handleWrapperClick">
 			<div ref="dialog" :style="style">
 				<slot name="title">
-					<span class="el-dialog__title">{{ title }}</span>
+					<span class="iu-dialog__title">{{ title }}</span>
 				</slot>
 				<slot></slot>
 				<slot name="footer"></slot>

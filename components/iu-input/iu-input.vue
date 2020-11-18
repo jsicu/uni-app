@@ -25,9 +25,9 @@
 <script>
 import emitter from '@/mixins/emitter.js';
 export default {
-	name: 'MyInput',
+	name: 'IuInput',
 
-	componentName: 'MyInput',
+	componentName: 'IuInput',
 	mixins: [emitter],
 	components: {},
 	props: {
@@ -43,7 +43,7 @@ export default {
 			// console.log(val)
 			// this.$nextTick(this.resizeTextarea);
 			// if (this.validateEvent) {
-			this.dispatch('MyFormItem', 'form-change', [val]);
+			this.dispatch('IuFormItem', 'form-change', [val]);
 			// }
 		},
 		// nativeInputValue() {
@@ -69,7 +69,7 @@ export default {
 			// this.focused = false;
 			this.$emit('blur', event);
 			// if (this.validateEvent) {
-			this.dispatch('MyFormItem', 'form-blur', [this.value]);
+			this.dispatch('IuFormItem', 'form-blur', [this.value]);
 			// }
 		},
 		handleInput(event) {

@@ -22,7 +22,7 @@
 			</label>
 			<div :style="{ 'margin-left': marginLeft.marginLeft, height: '80rpx' }">
 				<slot></slot>
-				<transition name="el-zoom-in-top">
+				<transition name="iu-zoom-in-top">
 					<slot v-if="isShowMes" name="error" :error="validateMessage">
 						<div class="validateMessage">
 							<!-- :class="{
@@ -43,10 +43,10 @@ import Emitter from '@/mixins/emitter.js';
 import objectAssign, { noop, getPropByPath } from '@/utils/util';
 
 export default {
-	name: 'MyFormItem',
-	componentName: 'MyFormItem',
+	name: 'IuFormItem',
+	componentName: 'IuFormItem',
 	mixins: [Emitter],
-	inject: ['myForm'],
+	inject: ['iuForm'],
 	props: {
 		label: { type: String, default: '' },
 		prop: { type: String },
@@ -67,7 +67,7 @@ export default {
 	},
 	mounted() {
 		if (this.prop) {
-			this.dispatch('MyForm', 'form-add', this);
+			this.dispatch('IuForm', 'form-add', this);
 			// 设置初始值
 			this.initialValue = this.fieldValue;
 			this.setRules();
@@ -79,7 +79,7 @@ export default {
 	},
 	// 组件销毁前，将实例从 Form 的缓存中移除
 	beforeDestroy() {
-		this.dispatch('MyForm', 'form-remove', this);
+		this.dispatch('IuForm', 'form-remove', this);
 	},
 	computed: {
 		// fieldValue() {
@@ -106,7 +106,7 @@ export default {
 		form() {
 			let parent = this.$parent;
 			let parentName = parent.$options.componentName;
-			while (parentName !== 'MyForm') {
+			while (parentName !== 'IuForm') {
 				// if (parentName === 'MyFormItem') {
 				// 	this.isNested = true;
 				// }

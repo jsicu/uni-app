@@ -13,8 +13,8 @@
 <script>
 import objectAssign from '@/utils/util.js';
 export default {
-	name: 'MyForm',
-	componentName: 'MyForm',
+	name: 'IuForm',
+	componentName: 'IuForm',
 	data() {
 		return { fields: [] };
 	},
@@ -24,7 +24,7 @@ export default {
 		labelWidth: String
 	},
 	provide() {
-		return { myForm: this };
+		return { iuForm: this };
 	},
 	mounted() {},
 	created() {

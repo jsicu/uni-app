@@ -9,14 +9,14 @@
  */ -->
 <template>
   <button
-    class="el-button"
+    class="iu-button"
     @click="handleClick"
     :disabled="buttonDisabled || loading"
     :autofocus="autofocus"
     :type="nativeType"
     :class="[
-      type ? 'el-button--' + type : '',
-      buttonSize ? 'el-button--' + buttonSize : '',
+      type ? 'iu-button--' + type : '',
+      buttonSize ? 'iu-button--' + buttonSize : '',
       {
         'is-disabled': buttonDisabled,
         'is-loading': loading,
@@ -26,20 +26,20 @@
       }
     ]"
   >
-    <i class="el-icon-loading" v-if="loading"></i>
+    <i class="iu-icon-loading" v-if="loading"></i>
     <i :class="icon" v-if="icon && !loading"></i>
     <span v-if="$slots.default"><slot></slot></span>
   </button>
 </template>
 <script>
   export default {
-    name: 'MyButton',
+    name: 'IuButton',
 
     inject: {
-      myForm: {
+      iuForm: {
         default: ''
       },
-      myFormItem: {
+      iuFormItem: {
         default: ''
       }
     },
@@ -67,14 +67,14 @@
     },
 
     computed: {
-      _elFormItemSize() {
-        return (this.myFormItem || {}).myFormItemSize;
+      _iuFormItemSize() {
+        return (this.iuFormItem || {}).iuFormItemSize;
       },
       buttonSize() {
-        return this.size || this._myFormItemSize || (this.$ELEMENT || {}).size;
+        return this.size || this._iuFormItemSize || (this.$ELEMENT || {}).size;
       },
       buttonDisabled() {
-        return this.disabled || (this.myForm || {}).disabled;
+        return this.disabled || (this.iuForm || {}).disabled;
       }
     },
 

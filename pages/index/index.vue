@@ -3,21 +3,20 @@
 	<view class="content">
 		<image class="logo" src="/static/logo.png"></image>
 		<view class="text-area"><text class="title">hello world</text></view>
-		<my-Form ref="form" :model="formData" :rules="rules" label-width="160rpx" style="width: 500rpx;">
-			<my-FormItem label="用户名:" prop="name">
-				<my-Input type="text" v-model="formData.name" placeholder="请输入用户名" />
-			</my-FormItem>
-			<my-FormItem label="密码:" prop="mail"><input type="text" v-model="formData.mail" placeholder="请输入密码" /></my-FormItem>
+		<iu-form ref="form" :model="formData" :rules="rules" label-width="160rpx" style="width: 500rpx;">
+			<iu-formItem label="用户名:" prop="name">
+				<iu-input type="text" v-model="formData.name" placeholder="请输入用户名" />
+			</iu-formItem>
+			<iu-formItem label="密码:" prop="mail"><input type="text" v-model="formData.mail" placeholder="请输入密码" /></iu-formItem>
 			<!-- <br /> -->
 			<view style="text-align: center;">
-				<my-Button @click="handleSubmit" type="primary" style="width: 100%;" :loading="loading">登录</my-Button>
-				<!-- <my-Button @click="handleReset" type="text" disabled>重置</my-Button> -->
+				<iu-button @click="handleSubmit" type="primary" style="width: 100%;" :loading="loading">登录</iu-button>
 			</view>
 			<view style="display: flex;justify-content: space-between;">
-				<my-Button @click="register" type="text" size="mini">注册</my-Button>
-				<my-Button @click="forgetPwd" type="text" size="mini">忘记密码?</my-Button>
+				<iu-button @click="register" type="text" size="mini">注册</iu-button>
+				<iu-button @click="forgetPwd" type="text" size="mini">忘记密码?</iu-button>
 			</view>
-		</my-Form>
+		</iu-form>
 	</view>
 </template>
 

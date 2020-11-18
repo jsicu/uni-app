@@ -1,6 +1,12 @@
+/*!
+ * explain: 对话框遮罩添加与移除
+ */
+
 import Vue from 'vue';
 import merge from '../util';
 import PopupManager from './popup-manager';
+import getScrollBarWidth from '../scrollbar-width';
+import { getStyle, addClass, removeClass, hasClass } from '../dom';
 
 let idSeed = 1;
 
@@ -10,6 +16,7 @@ export default {
 			type: Boolean,
 			default: false
 		},
+		closeDelay: {},
 		modal: {
 			type: Boolean,
 			default: false
@@ -127,6 +134,7 @@ export default {
 		},
 
 		close() {
+			// 关闭前动作，未使用
 			if (this.willClose && !this.willClose()) return;
 
 			if (this._openTimer !== null) {
@@ -169,7 +177,7 @@ export default {
 		restoreBodyStyle() {
 			if (this.modal && this.withoutHiddenClass) {
 				document.body.style.paddingRight = this.bodyPaddingRight;
-				removeClass(document.body, 'el-popup-parent--hidden');
+				removeClass(document.body, 'iu-popup-parent--hidden');
 			}
 			this.withoutHiddenClass = true;
 		}

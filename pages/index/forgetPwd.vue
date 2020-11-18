@@ -40,13 +40,13 @@
 		<iu-dialog
 		  title="提示"
 		  :visible.sync="dialogVisible"
-		  width="30%"
+			@onConfirm="onConfirm"
 		>
 		  <span>这是一段信息</span>
-		  <span slot="footer" class="dialog-footer">
+		  <!-- <span slot="footer" class="dialog-footer">
 		    <iu-button @click="dialogVisible = false">取 消</iu-button>
 		    <iu-button type="primary" @click="dialogVisible = false">确 定</iu-button>
-		  </span>
+		  </span> -->
 		</iu-dialog>
 	</view>
 </template>
@@ -76,6 +76,9 @@ export default {
 	watch: {},
 	//方法集合
 	methods: {
+		onConfirm() {
+			console.log('dsadasdas')
+		},
 		handleRegister() {
 			this.dialogVisible = true
 			// this.$refs.form.validate(valid => {

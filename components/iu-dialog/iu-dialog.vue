@@ -10,12 +10,23 @@
 <template>
 	<transition name="dialog-fade" @after-enter="afterEnter" @after-leave="afterLeave">
 		<div v-show="visible" class="iu-dialog__wrapper" @click.self="handleWrapperClick">
-			<div ref="dialog" :style="style">
+			<div
+				ref="dialog"
+				:style="style"
+				:aria-label="title || 'dialog'"
+				:class="['iu-dialog', { 'is-fullscreen': fullscreen }, customClass]"
+			>
 				<slot name="title">
 					<span class="iu-dialog__title">{{ title }}</span>
 				</slot>
 				<slot></slot>
-				<slot name="footer"></slot>
+				<div class="iu-dialog__footer" v-if="$slots.footer"><slot name="footer"></slot></div>
+				<div v-else>
+					<span class="iu-dialog__default-footer">
+					  <iu-button type="text" class="iu-dialog__button" style="color: #000;" @click="$emit('onCancel')">取消</iu-button>
+					  <iu-button type="text" class="iu-dialog__button iu-dialog__button-left"  @click="onConfirm">确定</iu-button>
+					</span>
+				</div>
 			</div>
 		</div>
 	</transition>
@@ -24,7 +35,7 @@
 <script>
 import Popup from '@/utils/popup';
 export default {
-	name: 'MyDialog',
+	name: 'IuDialog',
 	components: {},
 	mixins: [Popup],
 
@@ -45,8 +56,18 @@ export default {
 			type: Boolean,
 			default: true
 		},
+		top: {
+			type: String,
+			default: '25vh'
+		},
+		width: String,
+
 		fullscreen: Boolean,
-		beforeClose: Function
+		beforeClose: Function,
+		customClass: {
+			type: String,
+			default: ''
+		}
 	},
 	data() {
 		return {
@@ -66,6 +87,9 @@ export default {
 			}
 			return style;
 		}
+	},
+	created() {
+		console.log(this.$slots);
 	},
 	watch: {
 		visible(val) {
@@ -92,6 +116,10 @@ export default {
 	},
 	//方法集合
 	methods: {
+		onConfirm() {
+			this.$emit('onConfirm')
+		},
+		
 		handleWrapperClick() {
 			if (!this.closeOnClickModal) return;
 			this.handleClose();
@@ -117,7 +145,6 @@ export default {
 			this.$emit('closed');
 		}
 	},
-	created() {},
 	mounted() {},
 	beforeCreate() {},
 	beforeMount() {},

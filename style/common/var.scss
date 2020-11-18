@@ -94,7 +94,7 @@ $--border-base: $--border-width-base $--border-style-base $--border-color-base !
 /// borderRadius|1|Radius|0
 $--border-radius-base: 8rpx !default;
 /// borderRadius|1|Radius|0
-$--border-radius-small: 2px !default;
+$--border-radius-small: 20rpx !default;
 
 /* 对话框Dialog
 -------------------------- */
@@ -107,7 +107,7 @@ $--dialog-content-font-size: 14px !default;
 /// fontLineHeight||LineHeight|2
 $--dialog-font-line-height: $--font-line-height-primary !default;
 /// padding||Spacing|3
-$--dialog-padding-primary: 20px !default;
+$--dialog-padding-primary: 24rpx !default;
 
 /* 对话框Popup
 -------------------------- */

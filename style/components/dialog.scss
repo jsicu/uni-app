@@ -1,5 +1,5 @@
 @import 'mixins/mixins';
-@import "common/popup";
+@import 'common/popup';
 
 @include b(dialog) {
 	position: relative;
@@ -8,15 +8,54 @@
 	border-radius: $--border-radius-small;
 	box-shadow: $--dialog-box-shadow;
 	box-sizing: border-box;
-	width: 50%;
+	width: 60%;
 	@include e(wrapper) {
 		position: fixed;
-		// top: 0;
-		// right: 0;
-		// bottom: 0;
-		// left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
 		overflow: auto;
 		margin: 0;
+	}
+	@include e(default-footer) {
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-box-orient: horizontal;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: row;
+		flex-direction: row;
+		border-top: 2rpx solid #f5f5f5;
+	}
+	@include e(button) {
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-box-flex: 1;
+		-webkit-flex: 1;
+		flex: 1;
+		-webkit-box-orient: horizontal;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: row;
+		flex-direction: row;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		justify-content: center;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+		align-items: center;
+		height: 90rpx;
+	}
+	@include e(button-left) {
+		border-left: 2rpx solid #f0f0f0;
+		margin-left: 0 !important;
+	}
+	@include e(footer) {
+		padding: $--dialog-padding-primary;
+		padding-top: 20rpx;
+		text-align: center;
+		box-sizing: border-box;
 	}
 }
 
@@ -26,4 +65,27 @@
 
 .dialog-fade-leave-active {
 	animation: dialog-fade-out 0.3s;
+}
+
+/* 弹窗进出过渡动画 */
+@keyframes dialog-fade-in {
+	0% {
+		transform: translate3d(0, -20px, 0);
+		opacity: 0;
+	}
+	100% {
+		transform: translate3d(0, 0, 0);
+		opacity: 1;
+	}
+}
+
+@keyframes dialog-fade-out {
+	0% {
+		transform: translate3d(0, 0, 0);
+		opacity: 1;
+	}
+	100% {
+		transform: translate3d(0, -20px, 0);
+		opacity: 0;
+	}
 }

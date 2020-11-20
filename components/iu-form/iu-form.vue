@@ -36,6 +36,7 @@ export default {
 		});
 	},
 	methods: {
+		toJSON() {},
 		resetFields() {
 			this.fields.forEach(field => field.resetField());
 		},

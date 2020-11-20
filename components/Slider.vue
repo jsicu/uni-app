@@ -69,21 +69,54 @@ export default {
 			sliderId: 'slider' + new Date().getTime(),
 			arrowId: 'arrow' + new Date().getTime(),
 			value: 0,
-			disabled: false
+			disabled: false,
+			sliderWidth: [],
+			sliderLeft: 0
 		};
 	},
 	onLoad() {},
 	methods: {
 		changing(e) {
-			const sliderWidth = document.getElementById(this.sliderId).offsetWidth;
-			const arrowWidth = document.getElementById(this.arrowId).offsetWidth;
-			const left = ((arrowWidth / sliderWidth) * 100).toFixed(1);
-			console.log(left);
-			// TODO: 点击滑块前移优化
-			if (e.detail.value < left) {
-				this.value = left;
+			console.log(this.sliderLeft);
+			console.log(this.sliderWidth);
+			if (this.sliderLeft) {
+				// console.log(this.sliderLeft);
+				if (e.detail.value < this.sliderLeft) {
+					this.value = this.sliderLeft;
+				} else {
+					this.value = e.detail.value;
+				}
 			} else {
-				this.value = e.detail.value;
+				// console.log(this.sliderLeft);
+				//  #ifdef MP-WEIXIN
+				//创建节点选择器
+				var query = wx.createSelectorQuery().in(this);
+				query.selectAll(`#${this.arrowId}`).boundingClientRect();
+				query.selectAll(`#${this.sliderId}`).boundingClientRect();
+				query.exec(function(res) {
+					this.sliderWidth = [res[0][0].width, res[1][0].width];
+					this.sliderLeft = ((this.sliderWidth[0] / this.sliderWidth[1]) * 100).toFixed(1);
+					// if (e.detail.value < this.sliderLeft) {
+					// 	this.value = this.sliderLeft;
+					// } else {
+					// 	this.value = e.detail.value;
+					// }
+					// console.log(this.sliderLeft);
+					// console.log(this.sliderWidth);
+				});
+				// #endif
+
+				// #ifdef APP-PLUS || H5
+				this.sliderWidth[0] = document.getElementById(this.arrowId).offsetWidth;
+				this.sliderWidth[1] = document.getElementById(this.sliderId).offsetWidth;
+				this.sliderLeft = ((this.sliderWidth[0] / this.sliderWidth[1]) * 100).toFixed(1);
+				// TODO: 点击滑块前移优化
+				// if (e.detail.value < this.sliderLeft) {
+				// 	this.value = this.sliderLeft;
+				// } else {
+				// 	this.value = e.detail.value;
+				// }
+				// #endif
 			}
 		},
 		sliderChange(e) {

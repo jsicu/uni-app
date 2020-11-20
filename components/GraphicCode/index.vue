@@ -56,6 +56,7 @@ export default {
 		this.init();
 	},
 	methods: {
+		toJSON() {},
 		// 初始化验证码
 		init: function() {
 			const context = uni.createCanvasContext('imgcanvas', this);

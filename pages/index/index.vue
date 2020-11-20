@@ -5,9 +5,14 @@
 		<view class="text-area"><text class="title">hello world</text></view>
 		<iu-form ref="form" :model="formData" :rules="rules" label-width="160rpx" style="width: 500rpx;">
 			<iu-formItem label="用户名:" prop="name">
-				<iu-input type="text" v-model="formData.name" placeholder="请输入用户名" />
+				<input type="text" v-model="formData.name" placeholder="请输入用户名" />
 			</iu-formItem>
-			<iu-formItem label="密码:" prop="mail"><input type="text" v-model="formData.mail" placeholder="请输入密码" /></iu-formItem>
+			<iu-formItem label="密码:" prop="mail">
+				<input type="text" v-model="formData.mail" placeholder="请输入密码" />
+			</iu-formItem>
+			<!-- <iu-formItem label="验证码:" >
+				<GraphicCode />
+			</iu-formItem> -->
 			<!-- <br /> -->
 			<view style="text-align: center;">
 				<iu-button @click="handleSubmit" type="primary" style="width: 100%;" :loading="loading">登录</iu-button>
@@ -21,7 +26,9 @@
 </template>
 
 <script>
+	import GraphicCode from '../../components/GraphicCode/index.vue'
 export default {
+	components:{GraphicCode},
 	data() {
 		return {
 			loading: false,
@@ -47,6 +54,7 @@ export default {
 				else console.log('校验失败');
 			});
 		},
+		toJSON() {},
 		register() {
 			this.$refs.form.resetFields();
 			uni.navigateTo({

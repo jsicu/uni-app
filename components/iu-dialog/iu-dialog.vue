@@ -4,7 +4,7 @@
  * @Date: 2020-11-16 11:29:09
  * @lastAuthor:
  * @lastChangeDate:
- * @Explain: 对话框组件
+ * @Explain: 对话框组件(已作废)
  * @ChildComponents:
  */ -->
 <template>
@@ -23,8 +23,8 @@
 				<div class="iu-dialog__footer" v-if="$slots.footer"><slot name="footer"></slot></div>
 				<div v-else>
 					<span class="iu-dialog__default-footer">
-					  <iu-button type="text" class="iu-dialog__button" style="color: #000;" @click="$emit('onCancel')">取消</iu-button>
-					  <iu-button type="text" class="iu-dialog__button iu-dialog__button-left"  @click="onConfirm">确定</iu-button>
+						<iu-button type="text" class="iu-dialog__button" style="color: #000;" @click="$emit('onCancel')">取消</iu-button>
+						<iu-button type="text" class="iu-dialog__button iu-dialog__button-left" @click="onConfirm">确定</iu-button>
 					</span>
 				</div>
 			</div>
@@ -117,9 +117,9 @@ export default {
 	//方法集合
 	methods: {
 		onConfirm() {
-			this.$emit('onConfirm')
+			this.$emit('onConfirm');
 		},
-		
+
 		handleWrapperClick() {
 			if (!this.closeOnClickModal) return;
 			this.handleClose();

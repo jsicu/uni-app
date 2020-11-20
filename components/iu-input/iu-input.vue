@@ -9,10 +9,11 @@
  */ -->
 <template>
 	<div>
+		<!-- 	小程序不兼容		v-bind="$attrs" -->
 		<input
 			:value="value"
 			class="uni-input"
-			v-bind="$attrs"
+			:placeholder='placeholder'
 			ref="input"
 			@focus="handleFocus"
 			@blur="handleBlur"
@@ -31,7 +32,8 @@ export default {
 	mixins: [emitter],
 	components: {},
 	props: {
-		value: [String, Number]
+		value: [String, Number],
+		placeholder: String
 	},
 	data() {
 		return {};
@@ -45,7 +47,7 @@ export default {
 			// if (this.validateEvent) {
 			this.dispatch('IuFormItem', 'form-change', [val]);
 			// }
-		},
+		}
 		// nativeInputValue() {
 		// 	this.setNativeInputValue();
 		// }
@@ -79,7 +81,9 @@ export default {
 			this.$emit('change', event.target.value);
 		}
 	},
-	created() {},
+	created() {
+		// console.log(this.$props)
+	},
 	mounted() {
 		// this.setNativeInputValue();
 	},

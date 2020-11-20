@@ -37,17 +37,17 @@
 			</view>
 			<iu-button @click="signIn" type="text" size="mini" style="float: right;">返回登录</iu-button>
 		</iu-form>
-		<iu-dialog
+		<!-- <iu-dialog
 		  title="提示"
 		  :visible.sync="dialogVisible"
 			@onConfirm="onConfirm"
 		>
 		  <span>这是一段信息</span>
-		  <!-- <span slot="footer" class="dialog-footer">
+		  <span slot="footer" class="dialog-footer">
 		    <iu-button @click="dialogVisible = false">取 消</iu-button>
 		    <iu-button type="primary" @click="dialogVisible = false">确 定</iu-button>
-		  </span> -->
-		</iu-dialog>
+		  </span>
+		</iu-dialog> -->
 	</view>
 </template>
 

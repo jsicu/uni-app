@@ -5,7 +5,8 @@ import Vue from 'vue';
 const isServer = Vue.prototype.$isServer;
 const SPECIAL_CHARS_REGEXP = /([\:\-\_]+(.))/g;
 const MOZ_HACK_REGEXP = /^moz([A-Z])/;
-const ieVersion = isServer ? 0 : Number(document.documentMode);
+const doc = document ? document : {};
+const ieVersion = isServer ? 0 : Number(doc.documentMode);
 
 /* istanbul ignore next */
 const trim = function(string) {
@@ -20,7 +21,7 @@ const camelCase = function(name) {
 
 /* istanbul ignore next */
 export const on = (function() {
-  if (!isServer && document.addEventListener) {
+  if (!isServer && doc.addEventListener) {
     return function(element, event, handler) {
       if (element && event && handler) {
         element.addEventListener(event, handler, false);
@@ -37,7 +38,7 @@ export const on = (function() {
 
 /* istanbul ignore next */
 export const off = (function() {
-  if (!isServer && document.removeEventListener) {
+  if (!isServer && doc.removeEventListener) {
     return function(element, event, handler) {
       if (element && event) {
         element.removeEventListener(event, handler, false);
@@ -146,7 +147,7 @@ export const getStyle = ieVersion < 9 ? function(element, styleName) {
     styleName = 'cssFloat';
   }
   try {
-    var computed = document.defaultView.getComputedStyle(element, '');
+    var computed = doc.defaultView.getComputedStyle(element, '');
     return element.style[styleName] || computed ? computed[styleName] : null;
   } catch (e) {
     return element.style[styleName];
@@ -191,7 +192,7 @@ export const getScrollContainer = (el, vertical) => {
 
   let parent = el;
   while (parent) {
-    if ([window, document, document.documentElement].includes(parent)) {
+    if ([window, doc, doc.documentElement].includes(parent)) {
       return window;
     }
     if (isScroll(parent, vertical)) {
@@ -209,7 +210,7 @@ export const isInContainer = (el, container) => {
   const elRect = el.getBoundingClientRect();
   let containerRect;
 
-  if ([window, document, document.documentElement, null, undefined].includes(container)) {
+  if ([window, doc, doc.documentElement, null, undefined].includes(container)) {
     containerRect = {
       top: 0,
       right: window.innerWidth,

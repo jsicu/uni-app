@@ -13,10 +13,8 @@
 			<label
 				:for="labelFor"
 				v-if="label"
-				:style="labelStyle"
-				style="font-weight: 600;"
-				:class="{ 'label-required': isRequired }"
-				class="label-style"
+				:style="[{ 'font-weight': 600 }, { width: labelStyle }]"
+				:class="['label-style', { 'label-required': isRequired }]"
 			>
 				{{ label }}
 			</label>
@@ -59,7 +57,6 @@ export default {
 	},
 	data() {
 		return {
-			isRequired: false,
 			isShowMes: false,
 			validateMessage: '',
 			labelFor: 'input' + new Date().valueOf()
@@ -69,8 +66,14 @@ export default {
 		if (this.prop) {
 			this.dispatch('IuForm', 'form-add', this);
 			// 设置初始值
-			this.initialValue = this.fieldValue;
-			this.setRules();
+			let initialValue = this.fieldValue;
+			if (Array.isArray(initialValue)) {
+				initialValue = [].concat(initialValue);
+			}
+			Object.defineProperty(this, 'initialValue', {
+				value: initialValue
+			});
+			this.addValidateEvents();
 		}
 	},
 	created() {
@@ -82,17 +85,12 @@ export default {
 		this.dispatch('IuForm', 'form-remove', this);
 	},
 	computed: {
-		// fieldValue() {
-		// 	return this.form.model[this.prop];
-		// },
 		labelStyle() {
-			const ret = {};
-			// if (this.form.labelPosition === 'top') return ret;
 			const labelWidth = this.labelWidth || this.form.labelWidth;
 			if (labelWidth) {
-				ret.width = labelWidth;
+				return labelWidth;
 			}
-			return ret;
+			return '80rpx';
 		},
 		marginLeft() {
 			const ret = {};
@@ -126,25 +124,38 @@ export default {
 				path = path.replace(/:/, '.');
 			}
 			return getPropByPath(model, path, true).v;
+		},
+		isRequired() {
+			let rules = this.getRules();
+			let isRequired = false;
+
+			if (rules && rules.length) {
+				rules.every(rule => {
+					if (rule.required) {
+						isRequired = true;
+						return false;
+					}
+					return true;
+				});
+			}
+			return isRequired;
 		}
 	},
 	methods: {
-		setRules() {
+		toJSON() {},
+		addValidateEvents() {
 			let rules = this.getRules();
-			if (rules?.length) {
-				rules.forEach(rule => {
-					if (rule.required !== undefined) this.isRequired = rule.required;
-				});
+			if (rules.length || this.required !== undefined) {
+				this.$on('form-blur', this.onFieldBlur);
+				this.$on('form-change', this.onFieldChange);
 			}
-			this.$on('form-blur', this.onFieldBlur);
-			this.$on('form-change', this.onFieldChange);
 		},
 		getRules() {
 			let formRules = this.form.rules;
 			const selfRules = this.rules;
 			const requiredRule = this.required !== undefined ? { required: !!this.required } : [];
-			
-			const prop = getPropByPath(formRules, this.prop || ''); 
+
+			const prop = getPropByPath(formRules, this.prop || '');
 			formRules = formRules ? prop.o[this.prop || ''] || prop.v : [];
 			// 处理校验规则未添加导致的.filter is undefined报错
 			return [].concat(selfRules || formRules || []).concat(requiredRule);

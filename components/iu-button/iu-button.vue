@@ -25,6 +25,7 @@
         'is-circle': circle
       }
     ]"
+		:style="inlineStyle"
   >
     <i class="iu-icon-loading" v-if="loading"></i>
     <i :class="icon" v-if="icon && !loading"></i>
@@ -63,10 +64,21 @@
       plain: Boolean,
       autofocus: Boolean,
       round: Boolean,
-      circle: Boolean
+      circle: Boolean,
+			// #ifdef MP
+			style: String,
+			// #endif
     },
+		data() {
+			return {
+			}
+		},
 
     computed: {
+			inlineStyle() {
+				if(this.style) return this.style
+				return {}
+			},
       _iuFormItemSize() {
         return (this.iuFormItem || {}).iuFormItemSize;
       },

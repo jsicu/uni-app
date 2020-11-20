@@ -9,7 +9,7 @@
  */ -->
 <template>
 	<view class="content" style="padding-top: 40rpx;">
-		<iu-form ref="form" :model="formData" :rules="rules" label-width="180rpx" style="width: 600rpx;">
+		<iu-form ref="form" :model="formData" :rules="rules" label-width="220rpx" style="width: 600rpx;">
 			<iu-formItem label="用户名:" prop="name">
 				<iu-input type="text" v-model="formData.name" placeholder="请输入用户名" />
 			</iu-formItem>
@@ -29,8 +29,10 @@
 				</view>
 			</iu-formItem>
 			<iu-formItem label="验证码:">
-				<mySlider @success=" () => { formData.slider = true; } "
-				></mySlider>
+				<mySlider @success=" () => { formData.slider = true; } "/>
+			</iu-formItem>
+			<iu-formItem label="验证码:">
+				<mSlider />
 			</iu-formItem>
 			<view style="text-align: center;">
 				<iu-button @click="handleRegister" type="primary" style="width: 100%;" :loading="loading">注册</iu-button>
@@ -42,9 +44,10 @@
 
 <script>
 import mySlider from '@/components/Slider.vue';
+import mSlider from '@/components/new_file.vue';
 export default {
 	name: '',
-	components: { mySlider },
+	components: { mySlider, mSlider },
 	data() {
 		return {
 			loading: false,

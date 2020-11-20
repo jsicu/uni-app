@@ -45,7 +45,10 @@
 		-webkit-box-align: center;
 		-webkit-align-items: center;
 		align-items: center;
-		height: 90rpx;
+		/* #ifndef H5 */
+		height: 100rpx;
+		/* #endif */
+		// height: 90rpx;
 	}
 	@include e(button-left) {
 		border-left: 2rpx solid #f0f0f0;

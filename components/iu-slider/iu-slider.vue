@@ -33,7 +33,7 @@
 
 <script>
 export default {
-	name: 'Slider',
+	name: 'IuSlider',
 	components: {},
 	props: {
 		activeColor: {
@@ -106,55 +106,3 @@ export default {
 	}
 };
 </script>
-<style lang="scss" scoped>
-// // @import url();
-// // .iu-slider {
-// // 	position: absolute;
-// // 	background-color: #4fca9b;
-// // 	overflow: hidden;
-// // 	border: 1px solid #c0c0c0;
-// // 	border-radius: 4px;
-// // 	font-size: 32rpx;
-// // 	height: 60rpx;
-// // 	line-height: 60rpx;
-// // 	width: 100%;
-// // }
-// .slider__content {
-// 	overflow: hidden;
-// 	z-index: 45;
-// 	height: 90rpx;
-// 	width: 80rpx;
-// 	background-color: transparent;
-// }
-// .slider__movable {
-// 	height: 60rpx;
-// 	line-height: 60rpx;
-// 	position: absolute;
-// 	left: 0;
-// 	top: 0;
-// 	color: #787878;
-// 	// border-right: 1px solid #cccccc;
-// 	line-height: 50rpx;
-// 	background-color: #fff;
-// 	text-align: center;
-// 	width: 80rpx;
-// }
-// .slider__front {
-// 	padding-top: 1px;
-// 	height: 100%;
-// 	position: absolute;
-// 	border-top-left-radius: 4px;
-// 	border-bottom-left-radius: 4px;
-// 	opacity: 0.8;
-// }
-// .slider__background {
-// 	opacity: 0.8;
-// 	padding-top: 1px;
-// 	.slider__text {
-// 		height: 60rpx;
-// 		line-height: 60rpx;
-// 		text-align: center;
-// 		font-size: 25rpx;
-// 	}
-// }
-</style>

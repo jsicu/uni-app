@@ -90,19 +90,21 @@ export default {
 				// console.log(this.sliderLeft);
 				//  #ifdef MP-WEIXIN
 				//创建节点选择器
-				var query = wx.createSelectorQuery().in(this);
-				query.selectAll(`#${this.arrowId}`).boundingClientRect();
-				query.selectAll(`#${this.sliderId}`).boundingClientRect();
-				query.exec(function(res) {
-					this.sliderWidth = [res[0][0].width, res[1][0].width];
-					this.sliderLeft = ((this.sliderWidth[0] / this.sliderWidth[1]) * 100).toFixed(1);
-					// if (e.detail.value < this.sliderLeft) {
-					// 	this.value = this.sliderLeft;
-					// } else {
-					// 	this.value = e.detail.value;
-					// }
-					// console.log(this.sliderLeft);
-					// console.log(this.sliderWidth);
+				this.$nextTick(function() {
+					var query = wx.createSelectorQuery().in(this);
+					query.selectAll(`#${this.arrowId}`).boundingClientRect();
+					query.selectAll(`#${this.sliderId}`).boundingClientRect();
+					query.exec(function(res) {
+						this.sliderWidth = [res[0][0].width, res[1][0].width];
+						this.sliderLeft = ((this.sliderWidth[0] / this.sliderWidth[1]) * 100).toFixed(1);
+						// if (e.detail.value < this.sliderLeft) {
+						// 	this.value = this.sliderLeft;
+						// } else {
+						// 	this.value = e.detail.value;
+						// }
+						// console.log(this.sliderLeft);
+						// console.log(this.sliderWidth);
+					});
 				});
 				// #endif
 

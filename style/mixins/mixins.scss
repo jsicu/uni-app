@@ -1,8 +1,6 @@
 @import 'config';
 @import "function";
 
-/* button(按钮样式)
- -------------------------- */
 // 动态样式名称
 @mixin b($block) {
 	$B: $namespace + '-' + $block !global;

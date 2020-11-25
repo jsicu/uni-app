@@ -32,22 +32,32 @@
 				<mySlider @success=" () => { formData.slider = true; } "/>
 			</iu-formItem>
 			<iu-formItem label="验证码:">
-				<mSlider />
+				<iu-slider @success="success" />
 			</iu-formItem>
+			<iu-formItem label="验证码:">
+				<!-- <my-progress handleSize="20px" strokeWidth="20px" handleBorderRadius="0" /> -->
+				<my-progress />
+			</iu-formItem>
+			<!-- <iu-formItem label="验证码1:">
+				<iu-verify />
+			</iu-formItem> -->
 			<view style="text-align: center;">
 				<iu-button @click="handleRegister" type="primary" style="width: 100%;" :loading="loading">注册</iu-button>
 			</view>
 			<iu-button @click="signIn" type="text" size="mini" style="float: right;">已有账号，返回登录</iu-button>
 		</iu-form>
+		<verifySlider />
+		<mtest />
 	</view>
 </template>
 
 <script>
 import mySlider from '@/components/Slider.vue';
-import mSlider from '@/components/new_file.vue';
+import mtest from '../../components/test.vue'
+import verifySlider from '../../components/verifySlider.vue'
 export default {
 	name: '',
-	components: { mySlider, mSlider },
+	components: { mySlider, mtest, verifySlider },
 	data() {
 		return {
 			loading: false,
@@ -67,6 +77,9 @@ export default {
 	watch: {},
 	//方法集合
 	methods: {
+		success() {
+			console.log('sadas')
+		},
 		handleRegister() {
 			this.$refs.form.validate(valid => {
 				if (valid) console.log(this.formData);

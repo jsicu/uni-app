@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "async-validator": "^3.4.0"
+    "async-validator": "^3.4.0",
+    "crypto-js": "^4.0.0"
   }
 }

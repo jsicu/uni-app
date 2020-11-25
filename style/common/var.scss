@@ -83,6 +83,11 @@ $--font-line-height-primary: 48rpx !default;
 /// fontLineHeight|1|Line Height|2
 $--font-line-height-secondary: 32rpx !default;
 $--font-color-disabled-base: #bbb !default;
+
+/* Height
+-------------------------- */
+$--height-base: 60rpx !default;
+
 /* Size
 -------------------------- */
 $--size-base: 28rpx !default;
@@ -121,6 +126,10 @@ $--popup-modal-opacity: 0.5 !default;
 $--index-normal: 1 !default;
 $--index-top: 1000 !default;
 $--index-popper: 2000 !default;
+
+/* 滑块slider
+-------------------------- */
+$--slider-height: $--height-base !default;
 
 /* 按钮button 
 -------------------------- */

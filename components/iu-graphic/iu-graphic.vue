@@ -1,12 +1,19 @@
+<!-- 
+/**
+ * @Author: 老林头
+ * @Date: 2020-11-12 15:00:16
+ * @lastAuthor:
+ * @lastChangeDate:
+ * @Explain: 图形验证码组件
+ * @ChildComponents:
+ */ -->
 <template>
-	<view class="register">
-		<view class="canvas-img-code" @click="refresh">
-			<canvas
-				:style="{ width: width + 'rpx', height: height + 'rpx' }"
-				canvas-id="imgcanvas"
-				@error="canvasIdErrorCallback"
-			></canvas>
-		</view>
+	<view @click="refresh">
+		<canvas
+			:style="{ width: width + 'rpx', height: height + 'rpx' }"
+			canvas-id="imgcanvas"
+			@error="canvasIdErrorCallback"
+		/>
 	</view>
 </template>
 <script>
@@ -60,8 +67,8 @@ export default {
 		// 初始化验证码
 		init: function() {
 			const context = uni.createCanvasContext('imgcanvas', this);
-			context.setFillStyle('white');
-			context.fillRect(0, 0, this.width / 3, this.height / 3);
+			context.setFillStyle(this.rc(180, 240));
+			context.fillRect(0, 0, this.width, this.height);
 			let str = '';
 			for (let i = 0; i < this.numLen; i++) {
 				const c = pool[this.rn(0, pool.length - 1)];
@@ -78,11 +85,7 @@ export default {
 				str += c;
 			}
 			this.verification = str;
-			uni.setStorage({
-				key: 'imgcode',
-				data: str
-			});
-			// 验证码背景
+			/**绘制干扰点**/
 			for (var i = 0; i < (this.height * this.width) / 50; i++) {
 				context.beginPath();
 				context.arc(this.rn(0, this.width), this.rn(0, this.height), 1, 0, 2 * Math.PI);
@@ -90,20 +93,28 @@ export default {
 				context.setFillStyle(this.rc(150, 200));
 				context.fill();
 			}
+			/**绘制干扰线**/
+			for (var i = 0; i < this.numLen; i++) {
+				context.strokeStyle = this.rc(40, 180);
+				context.beginPath();
+				context.moveTo(this.rn(0, this.width), this.rn(0, this.height));
+				context.lineTo(this.rn(0, this.width), this.rn(0, this.height));
+				context.stroke();
+			}
 			context.draw();
 		},
 		// 字体颜色
-		rc: function(min, max) {
+		rc(min, max) {
 			var r = this.rn(min, max);
 			var g = this.rn(min, max);
 			var b = this.rn(min, max);
 			return `rgb(${r},${g},${b})`;
 		},
 		// 随机数
-		rn: function(max, min) {
+		rn(max, min) {
 			return parseInt(Math.random() * (max - min)) + min;
 		},
-		refresh: function() {
+		refresh() {
 			this.init();
 		},
 		checkCode(code) {
@@ -111,15 +122,15 @@ export default {
 			if (this.matchCase) {
 				for (let i = 0; i < this.verification.length; i++) {
 					if (code[i] !== this.verification[i]) {
-						this.refresh()
+						this.refresh();
 						return false;
 					}
 				}
 			} else if (code.toLowerCase() !== this.verification.toLowerCase()) {
-				this.refresh()
+				this.refresh();
 				return false;
 			}
-			return true
+			return true;
 		},
 		canvasIdErrorCallback: function(e) {
 			console.error(e.detail.errMsg);

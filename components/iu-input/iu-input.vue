@@ -14,6 +14,7 @@
 			:value="value"
 			class="uni-input"
 			:placeholder='placeholder'
+			:type="type"
 			ref="input"
 			@focus="handleFocus"
 			@blur="handleBlur"
@@ -33,7 +34,8 @@ export default {
 	components: {},
 	props: {
 		value: [String, Number],
-		placeholder: String
+		placeholder: String,
+		type: String
 	},
 	data() {
 		return {};

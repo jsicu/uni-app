@@ -2,11 +2,7 @@
 	<view style="position: relative;">
 		<!-- puzzle的情况 -->
 		<!-- 			v-if="type === '2'" -->
-		<view
-			class="verify-img-out"
-			v-show="showImage"
-			:style="{ height: parseInt(imgSize.height) + vSpace + 'px' }"
-		>
+		<view class="verify-img-out" v-show="showImage" :style="{ height: parseInt(imgSize.height) + vSpace + 'px' }">
 			<view class="verify-img-panel" :style="{ width: imgSize.width, height: imgSize.height }">
 				<image :src="backImgBase" alt="" style="width:100%;height:100%;display:block"></image>
 				<view class="verify-refresh" @click="refresh" v-show="showRefresh"><text class="iconfont icon-refresh"></text></view>
@@ -65,7 +61,7 @@
  * VerifySlide
  * @description 滑块
  * */
-import CryptoJS from 'crypto-js';
+// import CryptoJS from 'crypto-js';
 export default {
 	name: 'VerifySlide',
 	props: {
@@ -223,7 +219,7 @@ export default {
 						//拖动后小方块的left值
 						this.moveBlockLeft = move_block_left - parseInt(parseInt(this.blockSize.width) / 2) + 'px';
 						this.leftBarWidth = move_block_left - parseInt(parseInt(this.blockSize.width) / 2) + 'px';
-						console.log(this.leftBarWidth)
+						console.log(this.leftBarWidth);
 					}
 				})
 				.exec();
@@ -365,26 +361,22 @@ export default {
 			let data = {
 				// captchaType: this.captchaType
 			};
-			uni.request({
-				url: `${this.baseUrl}/verify/verify`, //仅为示例，并非真实接口地址。
+			this.$network({
+				url: `image/verify/verify`, //仅为示例，并非真实接口地址。
 				data,
 				method: 'GET',
-				success: result => {
-					let res = result.data;
-					if (res.code == '1') {
-						console.log(res.data)
-						this.backImgBase = res.data.sliderBG;
-						this.blockBackImgBase = res.data.slider;
-						this.backToken = res.data.token;
-					}
+				success: res => {
+					this.backImgBase = res.sliderBG;
+					this.blockBackImgBase = res.slider;
+					this.backToken = res.token;
 				}
 			});
 		},
 		aesEncrypt(word) {
-			var key = CryptoJS.enc.Utf8.parse('BGxdEUOZkXka4HSj');
-			var srcs = CryptoJS.enc.Utf8.parse(word);
-			var encrypted = CryptoJS.AES.encrypt(srcs, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
-			return encrypted.toString();
+			// var key = CryptoJS.enc.Utf8.parse('BGxdEUOZkXka4HSj');
+			// var srcs = CryptoJS.enc.Utf8.parse(word);
+			// var encrypted = CryptoJS.AES.encrypt(srcs, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+			// return encrypted.toString();
 		}
 	},
 	watch: {

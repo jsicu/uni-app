@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import { JSEncrypt } from 'jsencrypt';
+// import { JSEncrypt } from 'jsencrypt';
+import { JSEncrypt } from '../../utils/jsencrypt/jsencrypt.min.js';
 
 export default {
 	components: {},
@@ -93,12 +94,11 @@ export default {
 			});
 		},
 		register() {
-			
-			// this.$refs.form.resetFields();
-			// uni.navigateTo({
-			// 	// navigateTo redirectTo
-			// 	url: '/pages/index/register'
-			// });
+			this.$refs.form.resetFields();
+			uni.navigateTo({
+				// navigateTo redirectTo
+				url: '/pages/index/register'
+			});
 		},
 		forgetPwd() {
 			uni.navigateTo({

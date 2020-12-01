@@ -49,7 +49,7 @@
  * VerifyPoints
  * @description 点选
  * */
-import CryptoJS from 'crypto-js';
+// import CryptoJS from 'crypto-js';
 export default {
 	name: 'VerifyPoints',
 	props: {
@@ -276,11 +276,11 @@ export default {
 			return newPointArr;
 		},
 		aesEncrypt(word) {
-			var key = CryptoJS.enc.Utf8.parse('BGxdEUOZkXka4HSj');
-			var srcs = CryptoJS.enc.Utf8.parse(word);
-			var encrypted = CryptoJS.AES.encrypt(srcs, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
-			console.log(encrypted.toString())
-			return encrypted.toString();
+			// var key = CryptoJS.enc.Utf8.parse('BGxdEUOZkXka4HSj');
+			// var srcs = CryptoJS.enc.Utf8.parse(word);
+			// var encrypted = CryptoJS.AES.encrypt(srcs, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+			// console.log(encrypted.toString())
+			// return encrypted.toString();
 		}
 	},
 	watch: {

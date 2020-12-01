@@ -3,11 +3,14 @@
 	<view>
 		首页
 		<iu-button @click="loginOut" size="mini">推出</iu-button>
+		<verifySlider />
 	</view>
 </template>
 
 <script>
+	import verifySlider from '../../components/verifySlider.vue'
 	export default {
+		components: {verifySlider},
 		data() {
 			return {
 				

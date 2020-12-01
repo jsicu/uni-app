@@ -3,65 +3,121 @@
 	<view class="content">
 		<image class="logo" src="/static/logo.png"></image>
 		<view class="text-area"><text class="title">hello world</text></view>
-		<my-Form ref="form" :model="formData" :rules="rules" label-width="120rpx" style="width: 500rpx;">
-			<my-FormItem label="名称:" prop="name">
-				<my-Input type="text" v-model="formData.name" placeholder="请输入用户名" />
-			</my-FormItem>
-			<my-FormItem label="邮箱:" prop="mail"><input type="text" v-model="formData.mail" placeholder="请输入密码" /></my-FormItem>
-			<button @click="handleSubmit">提交</button>
-			<button @click="handleReset">重置</button>
-		</my-Form>
-		<!-- <view>
-			<form @submit="formSubmit" @reset="formReset">
-				<view class="uni-form-item uni-column">
-					<view class="title">input</view>
-					<input class="uni-input" name="input" placeholder="这是一个输入框" />
+		<iu-form ref="form" :model="formData" :rules="rules" label-width="160rpx" style="width: 500rpx;">
+			<iu-formItem label="用户名:" prop="name">
+				<iu-input type="text" v-model="formData.name" @input='change' placeholder="请输入用户名" />
+			</iu-formItem>
+			<iu-formItem label="密码:" prop="password">
+				<iu-input type="password" v-model="formData.password" placeholder="请输入密码" />
+			</iu-formItem>
+			<iu-formItem label="验证码:" prop="verify">
+				<view style="display: inline-flex;">
+					<iu-input type="text" v-model="formData.verify" placeholder="请输入四位数验证码" />
+					<iu-graphic ref="graphic" />
 				</view>
-			</form>
-		</view> -->
+			</iu-formItem>
+			<view style="text-align: center;">
+				<iu-button @click="handleSubmit" type="primary" style="width: 100%;">登录</iu-button>
+			</view>
+			<view style="display: flex;justify-content: space-between;">
+				<iu-button @click="register" type="text" size="mini">注册</iu-button>
+				<iu-button @click="forgetPwd" type="text" size="mini">忘记密码?</iu-button>
+			</view>
+		</iu-form>
+		<input v-model="value" auto-focus placeholder="将会获取焦点"/>
 	</view>
 </template>
 
 <script>
+// import { JSEncrypt } from 'jsencrypt';
+import { JSEncrypt } from '../../utils/jsencrypt/jsencrypt.min.js';
+
 export default {
+	components: {},
 	data() {
 		return {
-			formData: { name: '', mail: '' },
+			value: 'sdasdasdfasd',
+			formData: { name: '18838789f53eb4ec743f3630794be6a8ee858dc3', password: '123456', verify: '' },
 			rules: {
-				name: [{ required: true, message: '不能为空', trigger: 'blur' }],
-				mail: [
-					{ required: true, message: '不能为空', trigger: 'blur' },
-					{ type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-				]
+				name: [{ required: true, message: '必填项不得为空!' }],
+				password: [{ required: true, message: '必填项不得为空!' }],
+				verify: [{ required: false, message: '必填项不得为空!' }]
 			}
 		};
 	},
 	onLoad() {},
 	methods: {
+		change(val) {
+			console.log(val)
+		},
 		handleSubmit() {
-			// uni.redirectTo({ // navigateTo
-			// 	url: '/pages/home/home?id=1&name=uniapp'
-			// });
 			this.$refs.form.validate(valid => {
-				if (valid) console.log('提交成功');
-				else console.log('校验失败');
+				if (valid) {
+					// if (!this.$refs.graphic.checkCode(this.formData.verify)) return console.log('验证码错误');
+					this.$network({
+						url: 'security/publicKey',
+						success: res => {
+							this.publicKey(res);
+						}
+					});
+				} else console.log('校验失败');
 			});
 		},
-		handleReset() {
+		// toJSON() {},
+		async publicKey(publicKey) {
+			// 获取加密公钥
+			if (publicKey) {
+				const encrypt = new JSEncrypt();
+				encrypt.setPublicKey(publicKey);
+				const encrypted = encrypt.encrypt(this.formData.password);
+				this.$set(this.formData, 'password', encrypted);
+				this.login()
+			}
+		},
+		async login() {
+			//  加密后登录
+			this.$network({
+				url: 'security/login',
+				method: 'post',
+				data: this.formData,
+				success: res => {
+					console.log(res);
+					uni.setStorage({
+					    key: 'userInfo',
+					    data: res,
+					    success: function () {
+					        console.log('success');
+					    }
+					});
+					uni.redirectTo({
+						// navigateTo redirectTo
+						url: '/pages/home/home'
+					});
+				},
+				fail: err=> console.log(err)
+			});
+		},
+		register() {
 			this.$refs.form.resetFields();
+			uni.navigateTo({
+				// navigateTo redirectTo
+				url: '/pages/index/register'
+			});
+		},
+		forgetPwd() {
+			uni.navigateTo({
+				// navigateTo redirectTo
+				url: '/pages/index/forgetPwd'
+			});
 		}
+	},
+	created() {
+		// this.$set(this.input, 'password');
 	}
 };
 </script>
 
-<style>
-.content {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-}
-
+<style lang="scss" scoped>
 .logo {
 	height: 200rpx;
 	width: 200rpx;

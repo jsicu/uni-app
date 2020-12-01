@@ -1,0 +1,200 @@
+// 公告样式常量
+
+/* 过度元素Transition */
+$--md-fade-transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms cubic-bezier(0.23, 1, 0.32, 1) !default;
+
+/* 基础颜色color */
+/// color|1|Brand Color|0
+$--color-primary: #409EFF !default;
+/// color|1|Background Color|4
+$--color-white: #FFFFFF !default;
+/// color|1|Background Color|4
+$--color-black: #000000 !default;
+$--color-primary-light-1: mix($--color-white, $--color-primary, 10%) !default; /* 53a8ff */
+$--color-primary-light-2: mix($--color-white, $--color-primary, 20%) !default; /* 66b1ff */
+$--color-primary-light-3: mix($--color-white, $--color-primary, 30%) !default; /* 79bbff */
+$--color-primary-light-4: mix($--color-white, $--color-primary, 40%) !default; /* 8cc5ff */
+$--color-primary-light-5: mix($--color-white, $--color-primary, 50%) !default; /* a0cfff */
+$--color-primary-light-6: mix($--color-white, $--color-primary, 60%) !default; /* b3d8ff */
+$--color-primary-light-7: mix($--color-white, $--color-primary, 70%) !default; /* c6e2ff */
+$--color-primary-light-8: mix($--color-white, $--color-primary, 80%) !default; /* d9ecff */
+$--color-primary-light-9: mix($--color-white, $--color-primary, 90%) !default; /* ecf5ff */
+/// color|1|Functional Color|1
+$--color-success: #67C23A !default;
+/// color|1|Functional Color|1
+$--color-warning: #E6A23C !default;
+/// color|1|Functional Color|1
+$--color-danger: #F56C6C !default;
+/// color|1|Functional Color|1
+$--color-info: #909399 !default;
+
+$--color-success-light: mix($--color-white, $--color-success, 80%) !default;
+$--color-warning-light: mix($--color-white, $--color-warning, 80%) !default;
+$--color-danger-light: mix($--color-white, $--color-danger, 80%) !default;
+$--color-info-light: mix($--color-white, $--color-info, 80%) !default;
+
+$--color-success-lighter: mix($--color-white, $--color-success, 90%) !default;
+$--color-warning-lighter: mix($--color-white, $--color-warning, 90%) !default;
+$--color-danger-lighter: mix($--color-white, $--color-danger, 90%) !default;
+$--color-info-lighter: mix($--color-white, $--color-info, 90%) !default;
+/// color|1|Font Color|2
+$--color-text-primary: #303133 !default;
+/// color|1|Font Color|2
+$--color-text-regular: #606266 !default;
+/// color|1|Font Color|2
+$--color-text-secondary: #909399 !default;
+/// color|1|Font Color|2
+$--color-text-placeholder: #C0C4CC !default;
+/// color|1|Border Color|3
+$--border-color-base: #DCDFE6 !default;
+/// color|1|Border Color|3
+$--border-color-light: #E4E7ED !default;
+/// color|1|Border Color|3
+$--border-color-lighter: #EBEEF5 !default;
+/// color|1|Border Color|3
+$--border-color-extra-light: #F2F6FC !default;
+
+// Background
+/// color|1|Background Color|4
+$--background-color-base: #F5F7FA !default;
+
+/* 字体Typography
+-------------------------- */
+$--font-path: 'fonts' !default;
+$--font-display: 'auto' !default;
+/// fontSize|1|Font Size|0
+$--font-size-extra-large: 40rpx !default;
+/// fontSize|1|Font Size|0
+$--font-size-large: 36rpx !default;
+/// fontSize|1|Font Size|0
+$--font-size-medium: 32rpx !default;
+/// fontSize|1|Font Size|0
+$--font-size-base: 28rpx !default;
+/// fontSize|1|Font Size|0
+$--font-size-small: 26rpx !default;
+/// fontSize|1|Font Size|0
+$--font-size-extra-small: 24rpx !default;
+/// fontWeight|1|Font Weight|1
+$--font-weight-primary: 500 !default;
+/// fontWeight|1|Font Weight|1
+$--font-weight-secondary: 100 !default;
+/// fontLineHeight|1|Line Height|2
+$--font-line-height-primary: 48rpx !default;
+/// fontLineHeight|1|Line Height|2
+$--font-line-height-secondary: 32rpx !default;
+$--font-color-disabled-base: #bbb !default;
+
+/* Height
+-------------------------- */
+$--height-base: 60rpx !default;
+
+/* Size
+-------------------------- */
+$--size-base: 28rpx !default;
+
+/* 边框border */
+$--border-width-base: 2rpx !default;
+$--border-style-base: solid !default;
+$--border-base: $--border-width-base $--border-style-base $--border-color-base !default;
+/// borderRadius|1|Radius|0
+$--border-radius-base: 8rpx !default;
+/// borderRadius|1|Radius|0
+$--border-radius-small: 20rpx !default;
+
+/* 对话框Dialog
+-------------------------- */
+$--dialog-background-color: $--color-white !default;
+$--dialog-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !default;
+/// fontSize||Font|1
+$--dialog-title-font-size: $--font-size-large !default;
+/// fontSize||Font|1
+$--dialog-content-font-size: 14px !default;
+/// fontLineHeight||LineHeight|2
+$--dialog-font-line-height: $--font-line-height-primary !default;
+/// padding||Spacing|3
+$--dialog-padding-primary: 24rpx !default;
+
+/* 对话框Popup
+-------------------------- */
+/// color||Color|0
+$--popup-modal-background-color: $--color-black !default;
+/// opacity||Other|1
+$--popup-modal-opacity: 0.5 !default;
+
+/* z-index
+-------------------------- */
+$--index-normal: 1 !default;
+$--index-top: 1000 !default;
+$--index-popper: 2000 !default;
+
+/* 滑块slider
+-------------------------- */
+$--slider-height: $--height-base !default;
+
+/* 按钮button 
+-------------------------- */
+/// fontSize||Font|1
+$--button-font-size: $--font-size-base !default;
+/// fontWeight||Font|1
+$--button-font-weight: $--font-weight-primary !default;
+/// borderRadius||Border|2
+$--button-border-radius: $--border-radius-base !default;
+/// padding||Spacing|3
+$--button-padding-vertical: 24rpx !default;
+/// padding||Spacing|
+$--button-padding-horizontal: 40rpx !default;
+
+/// fontSize||Font|1
+$--button-medium-font-size: $--font-size-base !default;
+/// borderRadius||Border|2
+$--button-medium-border-radius: $--border-radius-base !default;
+/// padding||Spacing|3
+$--button-medium-padding-vertical: 20rpx !default;
+/// padding||Spacing|3
+$--button-medium-padding-horizontal: 40rpx !default;
+
+/// fontSize||Font|1
+$--button-small-font-size: 24rpx !default;
+$--button-small-border-radius: #{$--border-radius-base - 1} !default;
+/// padding||Spacing|3
+$--button-small-padding-vertical: 18rpx !default;
+/// padding||Spacing|3
+$--button-small-padding-horizontal: 30rpx !default;
+/// fontSize||Font|1
+$--button-mini-font-size: 24rpx !default;
+$--button-mini-border-radius: #{$--border-radius-base - 1} !default;
+/// padding||Spacing|3
+$--button-mini-padding-vertical: 14rpx !default;
+/// padding||Spacing|3
+$--button-mini-padding-horizontal: 30rpx !default;
+
+$--button-default-font-color: $--color-text-regular !default;
+$--button-default-background-color: $--color-white !default;
+$--button-default-border-color: $--border-color-base !default;
+
+$--button-disabled-font-color: $--color-text-placeholder !default;
+$--button-disabled-background-color: $--color-white !default;
+$--button-disabled-border-color: $--border-color-lighter !default;
+
+$--button-primary-border-color: $--color-primary !default;
+$--button-primary-font-color: $--color-white !default;
+$--button-primary-background-color: $--color-primary !default;
+
+$--button-success-border-color: $--color-success !default;
+$--button-success-font-color: $--color-white !default;
+$--button-success-background-color: $--color-success !default;
+
+$--button-warning-border-color: $--color-warning !default;
+$--button-warning-font-color: $--color-white !default;
+$--button-warning-background-color: $--color-warning !default;
+
+$--button-danger-border-color: $--color-danger !default;
+$--button-danger-font-color: $--color-white !default;
+$--button-danger-background-color: $--color-danger !default;
+
+$--button-info-border-color: $--color-info !default;
+$--button-info-font-color: $--color-white !default;
+$--button-info-background-color: $--color-info !default;
+
+$--button-hover-tint-percent: 20% !default;
+$--button-active-shade-percent: 10% !default;

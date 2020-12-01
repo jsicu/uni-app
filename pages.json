@@ -14,6 +14,18 @@
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false
 			}
+		}, {
+			"path": "pages/index/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/index/forgetPwd",
+			"style": {
+				"navigationBarTitleText": "找回密码",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {
@@ -25,7 +37,7 @@
 	"easycom": {
 		"autoscan": true,
 		"custom": {
-			"^my-(.*)": "@/components/my-$1/my-$1.vue"
+			"^my-(.*)": "@/components/iu-$1/iu-$1.vue"
 		}
 	}
 }

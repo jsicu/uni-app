@@ -1,6 +1,6 @@
 <!-- 
 /**
- * @Author: 林中奇
+ * @Author: 老林头
  * @Date: 2020-10-23 17:25:03
  * @lastAuthor:
  * @lastChangeDate:
@@ -13,8 +13,8 @@
 <script>
 import objectAssign from '@/utils/util.js';
 export default {
-	name: 'MyForm',
-	componentName: 'MyForm',
+	name: 'IuForm',
+	componentName: 'IuForm',
 	data() {
 		return { fields: [] };
 	},
@@ -24,19 +24,19 @@ export default {
 		labelWidth: String
 	},
 	provide() {
-		return { myForm: this };
+		return { iuForm: this };
 	},
 	mounted() {},
 	created() {
 		this.$on('form-add', field => {
 			if (field) this.fields.push(field);
-			console.log(this.field)
 		});
 		this.$on('form-remove', field => {
 			if (field.prop) this.fields.splice(this.fields.indexOf(field), 1);
 		});
 	},
 	methods: {
+		toJSON() {},
 		resetFields() {
 			this.fields.forEach(field => field.resetField());
 		},

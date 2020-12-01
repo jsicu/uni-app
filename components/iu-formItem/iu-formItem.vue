@@ -1,6 +1,6 @@
 <!-- 
 /**
- * @Author: 林中奇
+ * @Author: 老林头
  * @Date: 2020-10-23 17:25:03
  * @lastAuthor:
  * @lastChangeDate:
@@ -13,16 +13,24 @@
 			<label
 				:for="labelFor"
 				v-if="label"
-				:style="labelStyle"
-				style="font-weight: 600;"
-				:class="{ 'label-required': isRequired }"
-				class="label-style"
+				:style="[{ 'font-weight': 600 }, { width: labelStyle }]"
+				:class="['label-style', { 'label-required': isRequired }]"
 			>
 				{{ label }}
 			</label>
 			<div :style="{ 'margin-left': marginLeft.marginLeft, height: '80rpx' }">
 				<slot></slot>
-				<div v-if="isShowMes" class="message">{{ message }}</div>
+				<transition name="iu-zoom-in-top">
+					<slot v-if="isShowMes" name="error" :error="validateMessage">
+						<div class="validateMessage">
+							<!-- :class="{
+								'el-form-item__error--inline':
+									typeof inlineMessage === 'boolean' ? inlineMessage : (elForm && elForm.inlineMessage) || false
+							}" -->
+							{{ validateMessage }}
+						</div>
+					</slot>
+				</transition>
 			</div>
 		</div>
 	</div>
@@ -30,50 +38,59 @@
 <script>
 import AsyncValidator from 'async-validator';
 import Emitter from '@/mixins/emitter.js';
-import objectAssign, { noop } from '@/utils/util';
+import objectAssign, { noop, getPropByPath } from '@/utils/util';
 
 export default {
-	name: 'MyFormItem',
-	componentName: 'MyFormItem',
+	name: 'IuFormItem',
+	componentName: 'IuFormItem',
 	mixins: [Emitter],
-	inject: ['myForm'],
+	inject: ['iuForm'],
 	props: {
 		label: { type: String, default: '' },
 		prop: { type: String },
-		labelWidth: String
+		labelWidth: String,
+		required: {
+			type: Boolean,
+			default: undefined
+		},
+		rules: [Object, Array]
 	},
 	data() {
 		return {
-			isRequired: false,
 			isShowMes: false,
-			message: '',
+			validateMessage: '',
 			labelFor: 'input' + new Date().valueOf()
 		};
 	},
 	mounted() {
 		if (this.prop) {
-			this.dispatch('MyForm', 'form-add', this);
+			this.dispatch('IuForm', 'form-add', this);
 			// 设置初始值
-			this.initialValue = this.fieldValue;
-			this.setRules();
+			let initialValue = this.fieldValue;
+			if (Array.isArray(initialValue)) {
+				initialValue = [].concat(initialValue);
+			}
+			Object.defineProperty(this, 'initialValue', {
+				value: initialValue
+			});
+			this.addValidateEvents();
 		}
+	},
+	created() {
+		this.$on('form-blur', this.onFieldBlur);
+		this.$on('form-change', this.onFieldChange);
 	},
 	// 组件销毁前，将实例从 Form 的缓存中移除
 	beforeDestroy() {
-		this.dispatch('MyForm', 'form-remove', this);
+		this.dispatch('IuForm', 'form-remove', this);
 	},
 	computed: {
-		fieldValue() {
-			return this.form.model[this.prop];
-		},
 		labelStyle() {
-			const ret = {};
-			// if (this.form.labelPosition === 'top') return ret;
 			const labelWidth = this.labelWidth || this.form.labelWidth;
 			if (labelWidth) {
-				ret.width = labelWidth;
+				return labelWidth;
 			}
-			return ret;
+			return '80rpx';
 		},
 		marginLeft() {
 			const ret = {};
@@ -87,37 +104,65 @@ export default {
 		form() {
 			let parent = this.$parent;
 			let parentName = parent.$options.componentName;
-			while (parentName !== 'MyForm') {
+			while (parentName !== 'IuForm') {
 				// if (parentName === 'MyFormItem') {
 				// 	this.isNested = true;
 				// }
 				parent = parent.$parent;
 				parentName = parent.$options.componentName;
 			}
-			console.log(parent)
 			return parent;
+		},
+		fieldValue() {
+			const model = this.form.model;
+			if (!model || !this.prop) {
+				return;
+			}
+
+			let path = this.prop;
+			if (path.indexOf(':') !== -1) {
+				path = path.replace(/:/, '.');
+			}
+			return getPropByPath(model, path, true).v;
+		},
+		isRequired() {
+			let rules = this.getRules();
+			let isRequired = false;
+
+			if (rules && rules.length) {
+				rules.every(rule => {
+					if (rule.required) {
+						isRequired = true;
+						return false;
+					}
+					return true;
+				});
+			}
+			return isRequired;
 		}
 	},
 	methods: {
-		setRules() {
+		toJSON() {},
+		addValidateEvents() {
 			let rules = this.getRules();
-			if (rules.length) {
-				rules.forEach(rule => {
-					if (rule.required !== undefined) this.isRequired = rule.required;
-				});
+			if (rules.length || this.required !== undefined) {
+				this.$on('form-blur', this.onFieldBlur);
+				this.$on('form-change', this.onFieldChange);
 			}
-			this.$on('form-blur', this.onFieldBlur);
-			this.$on('form-change', this.onFieldChange);
 		},
 		getRules() {
 			let formRules = this.form.rules;
-			formRules = formRules ? formRules[this.prop] : [];
-			return formRules;
+			const selfRules = this.rules;
+			const requiredRule = this.required !== undefined ? { required: !!this.required } : [];
+
+			const prop = getPropByPath(formRules, this.prop || '');
+			formRules = formRules ? prop.o[this.prop || ''] || prop.v : [];
+			// 处理校验规则未添加导致的.filter is undefined报错
+			return [].concat(selfRules || formRules || []).concat(requiredRule);
 		},
 		// 过滤出符合要求的 rule 规则
 		getFilteredRule(trigger) {
 			const rules = this.getRules();
-
 			return rules
 				.filter(rule => {
 					if (!rule.trigger || trigger === '') return true;
@@ -140,20 +185,15 @@ export default {
 			// 使用 async-validator
 			const validator = new AsyncValidator({ [this.prop]: rules });
 			let model = { [this.prop]: this.fieldValue };
-			// validator.validate(model, { firstFields: true }, errors => {
-			// 	this.isShowMes = errors ? true : false;
-			// 	this.message = errors ? errors[0].message : '';
-			// 	if (callback) callback(this.message);
-			// });
 			validator.validate(model, { firstFields: true }, errors => {
 				this.isShowMes = errors ? true : false;
-				this.message = errors ? errors[0].message : '';
-				if (callback) callback(this.message);
-				this.elForm && this.elForm.$emit('validate', this.prop, !errors, this.message || null);
+				this.validateMessage = errors ? errors[0].message : '';
+				if (callback) callback(this.validateMessage);
+				this.elForm && this.elForm.$emit('validate', this.prop, !errors, this.validateMessage || null);
 			});
 		},
 		resetField() {
-			this.message = '';
+			this.validateMessage = '';
 			this.form.model[this.prop] = this.initialValue;
 		},
 		onFieldBlur() {
@@ -186,7 +226,7 @@ export default {
 		padding: 0 12px 0 0;
 		box-sizing: border-box;
 	}
-	.message {
+	.validateMessage {
 		color: #f56c6c;
 		font-size: 12px;
 		line-height: 1;

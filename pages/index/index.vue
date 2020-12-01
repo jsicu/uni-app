@@ -5,7 +5,7 @@
 		<view class="text-area"><text class="title">hello world</text></view>
 		<iu-form ref="form" :model="formData" :rules="rules" label-width="160rpx" style="width: 500rpx;">
 			<iu-formItem label="用户名:" prop="name">
-				<iu-input type="text" v-model="formData.name" placeholder="请输入用户名" />
+				<iu-input type="text" v-model="formData.name" @input='change' placeholder="请输入用户名" />
 			</iu-formItem>
 			<iu-formItem label="密码:" prop="password">
 				<iu-input type="password" v-model="formData.password" placeholder="请输入密码" />
@@ -16,7 +16,6 @@
 					<iu-graphic ref="graphic" />
 				</view>
 			</iu-formItem>
-			<!-- <br /> -->
 			<view style="text-align: center;">
 				<iu-button @click="handleSubmit" type="primary" style="width: 100%;">登录</iu-button>
 			</view>
@@ -25,6 +24,7 @@
 				<iu-button @click="forgetPwd" type="text" size="mini">忘记密码?</iu-button>
 			</view>
 		</iu-form>
+		<input v-model="value" auto-focus placeholder="将会获取焦点"/>
 	</view>
 </template>
 
@@ -36,7 +36,8 @@ export default {
 	components: {},
 	data() {
 		return {
-			formData: { name: '18838789f53eb4ec743f3630794be6a8ee858dc3', password: '123456' },
+			value: 'sdasdasdfasd',
+			formData: { name: '18838789f53eb4ec743f3630794be6a8ee858dc3', password: '123456', verify: '' },
 			rules: {
 				name: [{ required: true, message: '必填项不得为空!' }],
 				password: [{ required: true, message: '必填项不得为空!' }],
@@ -46,6 +47,9 @@ export default {
 	},
 	onLoad() {},
 	methods: {
+		change(val) {
+			console.log(val)
+		},
 		handleSubmit() {
 			this.$refs.form.validate(valid => {
 				if (valid) {
@@ -59,7 +63,7 @@ export default {
 				} else console.log('校验失败');
 			});
 		},
-		toJSON() {},
+		// toJSON() {},
 		async publicKey(publicKey) {
 			// 获取加密公钥
 			if (publicKey) {
@@ -106,6 +110,9 @@ export default {
 				url: '/pages/index/forgetPwd'
 			});
 		}
+	},
+	created() {
+		// this.$set(this.input, 'password');
 	}
 };
 </script>

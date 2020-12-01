@@ -13,13 +13,12 @@
 		<input
 			:value="value"
 			class="uni-input"
-			:placeholder='placeholder'
+			:placeholder="placeholder"
 			:type="type"
 			ref="input"
 			@focus="handleFocus"
 			@blur="handleBlur"
 			@input="handleInput"
-			@change="handleChange"
 		/>
 	</div>
 </template>
@@ -78,13 +77,10 @@ export default {
 		},
 		handleInput(event) {
 			this.$emit('input', event.target.value);
-		},
-		handleChange(event) {
-			this.$emit('change', event.target.value);
 		}
 	},
 	created() {
-		// console.log(this.$props)
+		// console.log(this.value);
 	},
 	mounted() {
 		// this.setNativeInputValue();

@@ -3,17 +3,18 @@
 	<view>
 		首页
 		<iu-button @click="loginOut" size="mini">推出</iu-button>
-		<verifySlider />
+		<!-- <verifySlider /> -->
+		<input v-model="value" auto-focus placeholder="将会获取焦点"/>
 	</view>
 </template>
 
 <script>
-	import verifySlider from '../../components/verifySlider.vue'
+	// import verifySlider from '../../components/verifySlider.vue'
 	export default {
-		components: {verifySlider},
+		components: {},
 		data() {
 			return {
-				
+				value: 'sdasdasdfasd',
 			};
 		},
 		methods:{

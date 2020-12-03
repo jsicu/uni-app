@@ -12,8 +12,10 @@
 		<!-- 	小程序不兼容		v-bind="$attrs" -->
 		<input
 			:value="value"
-			class="uni-input"
+			class="iu-input"
 			:placeholder="placeholder"
+			:placeholder-class="placeholderClass"
+			:placeholder-style="placeholderStyle"
 			:type="type"
 			ref="input"
 			@focus="handleFocus"
@@ -34,7 +36,12 @@ export default {
 	props: {
 		value: [String, Number],
 		placeholder: String,
-		type: String
+		type: String,
+		placeholderStyle: String,
+		placeholderClass: {
+			type: String,
+			default: 'iu-input--placeholder'
+		}
 	},
 	data() {
 		return {};

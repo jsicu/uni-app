@@ -1,18 +1,39 @@
 <template>
-	<view class="cont" v-if="show">
-		<view class="shuaxin" :style="{ transform: 'rotate(' + rotate + 'deg)' }" @click="refresh"></view>
-		<view class="title">图形验证</view>
+	<view class="independent" v-if="show">
+		<view
+			v-if="refreshStatus"
+			class="shuaxin iu-icon-refresh"
+			:style="{ transform: `rotate(-${rotate}deg)` }"
+			@click="refresh"
+		/>
 		<view class="imgWrap">
-			<image class="img" :src="src"></image>
+			<img class="img" :src="src" @error="imageError" />
 			<view class="over" :style="{ left: left + 'px', top: top + 'px' }"></view>
 			<view class="smartImg" :style="{ left: sleft + 'px', top: stop + 'px' }">
-				<image class="simg" :style="{ left: -left + 'px', top: -top + 'px' }" :src="src"></image>
+				<img class="simg" :style="{ left: -left + 'px', top: -top + 'px' }" :src="src" />
 			</view>
+			<transition name="iu-slider-success">
+				<view v-if="!refreshStatus" class="mack" :style="{ color: acColor }">
+					<image style="vertical-align: middle; width: 32rpx; height: 32rpx;" src="./Yes.png" />
+					{{ ' ' + message }}
+				</view>
+				<view v-if="message == '验证失败，请重试'" class="mack" :style="{ color: acColor }">
+					<image style="vertical-align: middle; width: 32rpx; height: 32rpx;" src="./fail.png" />
+					{{ ' ' + message }}
+				</view>
+			</transition>
 		</view>
 		<view class="sliderBox" @touchend="sliderEnd">
 			<movable-area class="sliderF">
-				<movable-view :animation="true" class="sliderS" :x="sliderx" direction="horizontal" @change="startMove">
-					<image class="icon" src="./right.png" mode=""></image>
+				<movable-view
+					:disabled="!refreshStatus"
+					:animation="true"
+					class="sliderS"
+					:x="sliderx"
+					direction="horizontal"
+					@change="startMove"
+				>
+					<image class="icon" src="./right.png" />
 				</movable-view>
 			</movable-area>
 
@@ -21,13 +42,12 @@
 				<view class="bgC_left" :style="{ width: backLeft + 'px' }"></view>
 			</view>
 		</view>
-		<view class="showMessage" :style="{ color: acColor }">{{ message }}</view>
 	</view>
 </template>
 
 <script>
 export default {
-	name: 'ceshiSlider',
+	name: 'Slider',
 	props: {
 		show: {
 			type: Boolean,
@@ -41,10 +61,11 @@ export default {
 	},
 	data() {
 		return {
+			isSuccess: false,
+			refreshStatus: true,
 			left: 0,
 			top: 0,
 			sleft: 0,
-			sleftDefault: 0,
 			stop: 0,
 			sliderx: 0,
 			backLeft: 0,
@@ -63,35 +84,26 @@ export default {
 		random() {
 			let imgLegth = 8;
 			let ram = Math.random();
-			this.left = Math.floor(80 * ram) + 140; //140-220
+			const index = Math.floor(ram * 3); // 选图
+			this.left = Math.floor(80 * ram) + 140; // 140-220
 			this.top = this.stop = Math.floor(80 * ram) + 10;
-			this.sleft = this.sleftDefault = Math.floor(70 * ram) + 10;
-			if (Math.floor(imgLegth * ram) == 8) {
-				this.src = `https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/shuijiao.jpg`;
-			} else {
-				this.src = `https://img-cdn-qiniu.dcloud.net.cn/uniapp/images/shuijiao.jpg`;
-			}
-			console.log(this.src)
-			//下面的代码必须这样写才能让滑块回到原点，如果直接this.sliderx=0不起作用
-			this.sliderx = 1;
-			setTimeout(() => {
-				this.sliderx = 0;
-				this.refreshStatus = false;
-			}, 300);
+			this.src = `/static/sliderImg/${index}.png`;
 		},
 		refresh() {
 			let rotateNum = this.rotateNum++;
-			this.rotate = rotateNum * 180;
+			this.rotate = rotateNum * 360; // 刷新时选择读书
 			this.message = '';
 			this.random();
 		},
 		startMove(e) {
+			if (!this.refreshStatus) return;
 			this.backLeft = e.detail.x + 18;
-			this.sleft = this.sleftDefault + e.detail.x;
+			this.sleft = e.detail.x;
 		},
 		sliderEnd() {
-			if (Math.abs(this.sleft - this.left) <= 4) {
+			if (Math.abs(this.sleft - this.left) <= 5) {
 				this.message = '验证成功!';
+				this.refreshStatus = false;
 				this.acColor = 'green';
 			} else {
 				this.message = '验证失败，请重试';
@@ -101,9 +113,12 @@ export default {
 					this.sliderx = 1;
 					setTimeout(() => {
 						this.sliderx = 0;
-					}, 300);
+					}, 100);
 				}, 1000);
 			}
+		},
+		imageError(e) {
+			console.error('image发生error事件，携带值为' + e.detail.errMsg);
 		}
 	}
 };
@@ -116,7 +131,7 @@ export default {
 	justify-content: center;
 }
 
-.cont {
+.independent {
 	position: relative;
 	background: #fff;
 	width: 300px;
@@ -125,12 +140,12 @@ export default {
 	padding-bottom: 20px;
 	.shuaxin {
 		position: absolute;
+		z-index: 1;
 		right: 20rpx;
-		top: 20px;
-		width: 40rpx;
-		height: 40rpx;
-		background: url(./Yes.png) no-repeat;
-		background-size: cover;
+		width: 60rpx;
+		height: 60rpx;
+		line-height: 60rpx;
+		text-align: center;
 		transition: all 0.3s;
 	}
 	.title {
@@ -149,6 +164,16 @@ export default {
 		margin: 0 auto;
 		overflow: hidden;
 		background: #ddd;
+		.mack {
+			position: absolute;
+			text-align: center;
+			width: 100%;
+			height: 25px;
+			bottom: 0;
+			background-color: #fff;
+			opacity: 0.8;
+			z-index: 10;
+		}
 		.img {
 			display: block;
 			width: 100%;
@@ -161,8 +186,9 @@ export default {
 			top: 0;
 			width: 50px;
 			height: 50px;
-			background: #ddd;
-			box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+			background: #777;
+			opacity: 0.5;
+			box-shadow: inset 0 0 5px 5px rgba(0, 0, 0, 0.3);
 		}
 
 		.smartImg {
@@ -173,7 +199,7 @@ export default {
 			width: 50px;
 			height: 50px;
 			overflow: hidden;
-			box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+			box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.3);
 
 			.simg {
 				position: absolute;
@@ -186,8 +212,8 @@ export default {
 }
 
 .sliderBox {
-	width: 280px;
-	margin: 10px auto 0;
+	width: 266px;
+	margin: 10px 17px;
 	height: 36px;
 	position: relative;
 
@@ -244,11 +270,5 @@ export default {
 		box-shadow: inset 0 0 4px #ccc;
 		text-align: center;
 	}
-}
-.showMessage {
-	text-align: center;
-	font-size: 14px;
-	height: 30px;
-	line-height: 30px;
 }
 </style>

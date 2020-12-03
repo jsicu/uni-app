@@ -12,7 +12,7 @@
 			</iu-formItem>
 			<iu-formItem label="验证码:" prop="verify">
 				<view style="display: inline-flex;">
-					<iu-input type="text" v-model="formData.verify" placeholder="请输入四位数验证码" />
+					<iu-input type="text" v-model="formData.verify" placeholder="请输入右侧验证码" />
 					<iu-graphic ref="graphic" />
 				</view>
 			</iu-formItem>
@@ -24,12 +24,10 @@
 				<iu-button @click="forgetPwd" type="text" size="mini">忘记密码?</iu-button>
 			</view>
 		</iu-form>
-		<input v-model="value" auto-focus placeholder="将会获取焦点"/>
 	</view>
 </template>
 
 <script>
-// import { JSEncrypt } from 'jsencrypt';
 import { JSEncrypt } from '../../utils/jsencrypt/jsencrypt.min.js';
 
 export default {
@@ -111,9 +109,7 @@ export default {
 			});
 		}
 	},
-	created() {
-		// this.$set(this.input, 'password');
-	}
+	created() {}
 };
 </script>
 

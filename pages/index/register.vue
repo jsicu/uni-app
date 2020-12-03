@@ -46,18 +46,17 @@
 			</view>
 			<iu-button @click="signIn" type="text" size="mini" style="float: right;">已有账号，返回登录</iu-button>
 		</iu-form>
-		<verifySlider />
-		<mtest />
+		<!-- <verifySlider /> -->
+		<iu-slider__independent />
 	</view>
 </template>
 
 <script>
 import mySlider from '@/components/Slider.vue';
-import mtest from '../../components/test.vue'
 import verifySlider from '../../components/verifySlider.vue'
 export default {
 	name: '',
-	components: { mySlider, mtest, verifySlider },
+	components: { mySlider, verifySlider },
 	data() {
 		return {
 			loading: false,

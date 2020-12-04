@@ -362,7 +362,7 @@ export default {
 				// captchaType: this.captchaType
 			};
 			this.$network({
-				url: `image/verify/verify`, //仅为示例，并非真实接口地址。
+				url: `image/verify/puzzle`, //仅为示例，并非真实接口地址。
 				data,
 				method: 'GET',
 				success: res => {

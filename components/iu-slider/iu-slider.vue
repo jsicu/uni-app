@@ -4,7 +4,7 @@
  * @Date: 2020-11-20 14:00:55
  * @lastAuthor:
  * @lastChangeDate:
- * @Explain:
+ * @Explain: 滑块验证最终版
  * @ChildComponents:
  */ -->
 <template>

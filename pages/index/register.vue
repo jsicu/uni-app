@@ -29,14 +29,7 @@
 				</view>
 			</iu-formItem>
 			<iu-formItem label="验证码:">
-				<mySlider @success=" () => { formData.slider = true; } "/>
-			</iu-formItem>
-			<iu-formItem label="验证码:">
 				<iu-slider @success="success" />
-			</iu-formItem>
-			<iu-formItem label="验证码:">
-				<!-- <my-progress handleSize="20px" strokeWidth="20px" handleBorderRadius="0" /> -->
-				<my-progress />
 			</iu-formItem>
 			<!-- <iu-formItem label="验证码1:">
 				<iu-verify />
@@ -46,17 +39,17 @@
 			</view>
 			<iu-button @click="signIn" type="text" size="mini" style="float: right;">已有账号，返回登录</iu-button>
 		</iu-form>
-		<!-- <verifySlider /> -->
+		<verifySlider />
+		<iu-verify />
 		<iu-slider__independent />
 	</view>
 </template>
 
 <script>
-import mySlider from '@/components/Slider.vue';
 import verifySlider from '../../components/verifySlider.vue'
 export default {
 	name: '',
-	components: { mySlider, verifySlider },
+	components: { verifySlider },
 	data() {
 		return {
 			loading: false,

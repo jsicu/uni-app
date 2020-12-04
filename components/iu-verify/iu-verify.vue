@@ -6,7 +6,7 @@
 					<text class="iconfont icon-refresh"></text>
 				</view>
 				<!-- 'data:image/png;base64,' + pointBackImgBase src='../Yes.png' -->
-				<timg.jpg
+				<image
 					:src="'data:image/png;base64,' + pointBackImgBase"
 					id="image"
 					ref="canvas"

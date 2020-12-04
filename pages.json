@@ -37,7 +37,7 @@
 	"easycom": {
 		"autoscan": true,
 		"custom": {
-			"^my-(.*)": "@/components/iu-$1/iu-$1.vue"
+			"^iu-(.*)": "@/components/iu-$1/iu-$1.vue"
 		}
 	}
 }

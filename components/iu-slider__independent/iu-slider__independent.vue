@@ -1,3 +1,12 @@
+<!-- 
+/**
+ * @Author: 老林头
+ * @Date: 2020-12-01 14:00:55
+ * @lastAuthor:
+ * @lastChangeDate:
+ * @Explain: 前台滑块拼图验证
+ * @Unfinish: 样式统一、拼图样式
+ */ -->
 <template>
 	<view class="independent" v-if="show">
 		<view

@@ -39,7 +39,7 @@
 			</view>
 			<iu-button @click="signIn" type="text" size="mini" style="float: right;">已有账号，返回登录</iu-button>
 		</iu-form>
-		<verifySlider />
+		<!-- <verifySlider /> -->
 		<iu-verify />
 		<iu-slider__independent />
 	</view>

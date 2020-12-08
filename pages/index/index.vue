@@ -34,7 +34,6 @@ export default {
 	components: {},
 	data() {
 		return {
-			value: 'sdasdasdfasd',
 			formData: { name: '18838789f53eb4ec743f3630794be6a8ee858dc3', password: '123456', verify: '' },
 			rules: {
 				name: [{ required: true, message: '必填项不得为空!' }],
@@ -52,10 +51,19 @@ export default {
 			this.$refs.form.validate(valid => {
 				if (valid) {
 					// if (!this.$refs.graphic.checkCode(this.formData.verify)) return console.log('验证码错误');
+					// uni.redirectTo({
+					// 	// navigateTo redirectTo
+					// 	url: '/pages/home/home'
+					// });
 					this.$network({
 						url: 'security/publicKey',
 						success: res => {
 							this.publicKey(res);
+							// 保存公玥，用于其他数据加密使用
+							uni.setStorage({
+							    key: 'publicKey',
+							    data: res
+							});
 						}
 					});
 				} else console.log('校验失败');

@@ -4,8 +4,8 @@
  * @Date: 2020-12-01 14:00:55
  * @lastAuthor:
  * @lastChangeDate:
- * @Explain: 前台滑块拼图验证
- * @Unfinish: 样式统一、拼图样式
+ * @Explain: 前台滑块拼图验证（由于小程序不适用id节点，所以难以使用canvas绘制好看的滑块，只能为方形）
+ * @Unfinish: 样式统一（由于滑块太丑了，所以不打算统一样式了）
  */ -->
 <template>
 	<view class="independent" v-if="show">

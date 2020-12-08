@@ -1,11 +1,11 @@
 <template>
 	<view style="position: relative;">
 		<!-- puzzle的情况 -->
-		<!-- 			v-if="type === '2'" -->
-		<view class="verify-img-out" v-show="showImage" :style="{ height: parseInt(imgSize.height) + vSpace + 'px' }">
+		<view v-if="type === '2'" class="verify-img-out" :style="{ height: parseInt(imgSize.height) + space + 'px' }">
 			<view class="verify-img-panel" :style="{ width: imgSize.width, height: imgSize.height }">
 				<image :src="backImgBase" alt="" style="width:100%;height:100%;display:block"></image>
 				<view class="verify-refresh" @click="refresh" v-show="showRefresh"><text class="iconfont icon-refresh"></text></view>
+				<!-- iu-slider-success -->
 				<transition name="tips">
 					<text class="verify-tips" v-if="tipWords" :style="{ 'background-color': tipsBackColor }">{{ tipWords }}</text>
 				</transition>
@@ -13,44 +13,49 @@
 		</view>
 
 		<!-- 公共部分 -->
-		<view class="verify-bar-area" :style="{ width: imgSize.width, height: '40px', 'line-height': '40px' }">
-			<text class="verify-msg" v-text="text"></text>
+		<view
+			class="verify-bar-area"
+			:style="{
+				width: imgSize.width,
+				height: '40px',
+				'line-height': '40px',
+				'border-color': sliderBorderColor
+			}"
+		>
+			<text class="verify-msg" v-text="tipsText"></text>
 			<view
 				class="verify-left-bar"
 				:style="{
 					width: leftBarWidth ? leftBarWidth : '40px',
 					height: '40px',
-					'border-color': leftBarBorderColor,
+					'border-color': sliderBorderColor,
 					transaction: transitionWidth
 				}"
+			></view>
+			<view
+				class="verify-move-block"
+				@touchstart="start"
+				@touchend="end"
+				@touchmove="move"
+				:style="{
+					width: '40px',
+					height: '40px',
+					left: moveBlockLeft,
+					transition: transitionLeft
+				}"
 			>
-				<text class="verify-msg" v-text="finishText"></text>
+				<text :class="['verify-icon iconfont', iconClass]" :style="{ color: iconColor }"></text>
+				<!-- width: Math.ceil((parseInt(imgSize.width) * 50) / 310) + 'px', -->
 				<view
-					class="verify-move-block"
-					@touchstart="start"
-					@touchend="end"
-					@touchmove="move"
+					v-if="type === '2'"
+					class="verify-sub-block"
 					:style="{
-						width: '40px',
-						height: '40px',
-						'background-color': moveBlockBackgroundColor,
-						left: moveBlockLeft,
-						transition: transitionLeft
+						width: '60px',
+						height: imgSize.height,
+						top: '-' + (parseInt(imgSize.height) + space) + 'px'
 					}"
 				>
-					<text :class="['verify-icon iconfont', iconClass]" :style="{ color: iconColor }"></text>
-					<!-- width: Math.ceil((parseInt(imgSize.width) * 50) / 310) + 'px', -->
-					<view
-						class="verify-sub-block"
-						:style="{
-							width: '60px',
-							height: imgSize.height,
-							top: '-' + (parseInt(imgSize.height) + vSpace) + 'px'
-						}"
-						v-show="showImage"
-					>
-						<image :src="blockBackImgBase" alt="" style="width:100%;height:100%;display:block"></image>
-					</view>
+					<image :src="blockBackImgBase" alt="" style="width:100%;height:100%;display:block"></image>
 				</view>
 			</view>
 		</view>
@@ -61,37 +66,36 @@
  * VerifySlide
  * @description 滑块
  * */
-// import CryptoJS from 'crypto-js';
+import { JSEncrypt } from '../utils/jsencrypt/jsencrypt.min.js';
 export default {
 	name: 'VerifySlide',
 	props: {
-		captchaId: {
-			type: String
-		},
+		// 验证类型，0为滑动；1为点击
 		captchaType: {
-			type: String
+			type: Number,
+			default: 0
 		},
+		// 验证类型，1为滑块验证；2为滑块拼图验证
 		type: {
 			type: String,
 			default: '1'
 		},
-		//弹出式pop，固定fixed
-		mode: {
-			type: String,
-			default: 'fixed'
-		},
+		// 滑动判断误差
 		vOffset: {
 			type: Number,
 			default: 5
 		},
-		vSpace: {
+		// 图片图滑动槽之间间隔
+		space: {
 			type: Number,
-			default: 5
+			default: 10
 		},
+		// 滑动槽文字提示
 		explain: {
 			type: String,
 			default: '向右滑动完成验证'
 		},
+		// 图片宽高
 		imgSize: {
 			type: Object,
 			default() {
@@ -101,6 +105,7 @@ export default {
 				};
 			}
 		},
+		// 暂不知
 		blockSize: {
 			type: Object,
 			default() {
@@ -123,45 +128,43 @@ export default {
 	data() {
 		return {
 			baseUrl: 'http://localhost:4000/image',
-			backImgBase: '', //验证码背景图片
+			backImgBase: '', // 验证码背景图片
 			blockBackImgBase: '',
-			backToken: '', //后端返回的唯一token值
-			startMoveTime: '', //移动开始的时间
-			endMovetime: '', //移动结束的时间
-			tipsBackColor: '', //提示词的北京颜色
-			tipWords: '',
-			imgRand: 0,
-			text: '',
-			finishText: '',
+			backToken: '', // 后端返回的唯一token值
+			startMoveTime: '', // 移动开始的时间
+			endMovetime: '', // 移动结束的时间
+			tipsBackColor: '', // 提示词的背景颜色
+			tipWords: '', // xx秒成功提示词
+			tipsText: '',
 			setSize: {
 				imgHeight: 0,
 				imgWidth: 0,
 				barHeight: 0,
 				barWidth: 0
 			},
-			top: 0,
-			left: 0,
-			showImage: true,
 			moveBlockLeft: undefined,
 			leftBarWidth: undefined,
+			slierWidth: 0,
 			// 移动中样式
-			moveBlockBackgroundColor: undefined,
-			leftBarBorderColor: '#ddd',
+			sliderBorderColor: '#ddd',
 			iconColor: undefined,
 			iconClass: 'icon-right',
-			status: false, //鼠标状态
-			isEnd: false, //是够验证完成
+			status: false, // 鼠标状态
+			isEnd: false, // 是够验证完成
 			showRefresh: true,
 			transitionLeft: '',
 			transitionWidth: ''
 		};
 	},
+	created() {
+		// console.log(this.type);
+	},
 	methods: {
 		init() {
-			this.text = this.explain;
+			this.tipsText = this.explain;
 			this.getPictrue();
 			this.$nextTick(() => {
-				this.$parent.$emit('ready', this);
+				this.$emit('ready', this);
 			});
 		},
 
@@ -169,9 +172,6 @@ export default {
 		start: function(e) {
 			this.startMoveTime = new Date().getTime(); //开始滑动的时间
 			if (this.isEnd == false) {
-				this.text = '';
-				this.moveBlockBackgroundColor = '#337ab7';
-				this.leftBarBorderColor = '#337AB7';
 				this.iconColor = '#fff';
 				e.stopPropagation();
 				this.status = true;
@@ -179,14 +179,14 @@ export default {
 		},
 		//鼠标移动
 		move: function(e) {
-			var query = uni.createSelectorQuery().in(this);
+			const query = uni.createSelectorQuery().in(this);
 			this.barArea = query.select('.verify-bar-area');
 			var bar_area_left, barArea_offsetWidth;
 			this.barArea
 				.boundingClientRect(data => {
 					bar_area_left = Math.ceil(data.left);
+					this.slierWidth = data.width - 42; // 扣除边框2px和滑块40px
 					barArea_offsetWidth = Math.ceil(data.width);
-
 					if (this.status && this.isEnd == false) {
 						if (!e.touches) {
 							//兼容移动端
@@ -195,18 +195,15 @@ export default {
 							//兼容PC端
 							var x = Math.ceil(e.touches[0].pageX);
 						}
-						// var bar_area_left = this.getLeft(this.barArea);
-
-						var move_block_left = x - bar_area_left; //小方块相对于父元素的left值
+						var move_block_left = x - bar_area_left; // 小方块相对于父元素的left值
 						if (this.type !== '1') {
-							//图片滑动
+							// 图片滑动
 							if (move_block_left >= barArea_offsetWidth - parseInt(parseInt(this.blockSize.width) / 2) - 2) {
 								move_block_left = barArea_offsetWidth - parseInt(parseInt(this.blockSize.width) / 2) - 2;
 							}
 						} else {
-							//普通滑动
+							// 普通滑动
 							if (move_block_left >= barArea_offsetWidth - parseInt(parseInt(this.barSize.height) / 2) + 3) {
-								this.finishText = '松开验证';
 								move_block_left = barArea_offsetWidth - parseInt(parseInt(this.barSize.height) / 2) + 3;
 							} else {
 								this.finishText = '';
@@ -219,7 +216,6 @@ export default {
 						//拖动后小方块的left值
 						this.moveBlockLeft = move_block_left - parseInt(parseInt(this.blockSize.width) / 2) + 'px';
 						this.leftBarWidth = move_block_left - parseInt(parseInt(this.blockSize.width) / 2) + 'px';
-						console.log(this.leftBarWidth);
 					}
 				})
 				.exec();
@@ -228,52 +224,41 @@ export default {
 		//鼠标松开
 		end: function() {
 			this.endMovetime = new Date().getTime();
-			var _this = this;
-			//                判断是否重合
+			// 判断是否重合
 			if (this.status && this.isEnd == false) {
 				if (this.type !== '1') {
-					//图片滑动
-					var moveLeftDistance = parseInt((this.moveBlockLeft || '').replace('px', ''));
-
+					// 图片滑动距离
+					let moveLeftDistance = parseInt((this.moveBlockLeft || '').replace('px', ''));
+					console.log(moveLeftDistance);
 					moveLeftDistance = (moveLeftDistance * 310) / parseInt(this.imgSize.width);
-
+					console.log(moveLeftDistance);
 					var captchaVerification = this.aesEncrypt(this.backToken + '---' + JSON.stringify({ x: moveLeftDistance, y: 5.0 }));
 					let data = {
 						captchaType: this.captchaType,
-						pointJson: this.aesEncrypt(JSON.stringify({ x: moveLeftDistance, y: 5.0 })),
-						token: this.backToken
+						checkJson: this.aesEncrypt(moveLeftDistance)
 					};
 
-					uni.request({
-						url: `${this.baseUrl}/captcha/check`, //仅为示例，并非真实接口地址。
+					this.$network({
+						url: `image/check`, // 仅为示例，并非真实接口地址。
 						data,
 						method: 'POST',
 						success: result => {
 							let res = result.data;
+
 							if (res.repCode == '0000') {
-								this.moveBlockBackgroundColor = '#5cb85c';
-								this.leftBarBorderColor = '#5cb85c';
 								this.iconColor = '#fff';
 								this.iconClass = 'icon-check';
 								this.showRefresh = true;
 								this.isEnd = true;
-								if (this.mode == 'pop') {
-									setTimeout(() => {
-										this.$parent.clickShow = false;
-										this.refresh();
-									}, 1500);
-								}
 
 								// this.tipsBackColor = '#5cb85c'
 								this.tipsBackColor = 'rgb(92, 184, 92,.5)';
 								this.tipWords = `${((this.endMovetime - this.startMoveTime) / 1000).toFixed(2)}s验证成功`;
 								setTimeout(() => {
 									this.tipWords = '';
-									this.$parent.$emit('success', { captchaVerification });
+									this.$emit('success', { captchaVerification });
 								}, 1000);
 							} else {
-								this.moveBlockBackgroundColor = '#d9534f';
-								this.leftBarBorderColor = '#d9534f';
 								this.iconColor = '#fff';
 								this.iconClass = 'icon-close';
 								// this.tipsBackColor = '#d9534f'
@@ -281,7 +266,7 @@ export default {
 								setTimeout(() => {
 									this.refresh();
 								}, 1000);
-								this.$parent.$emit('error', this);
+								this.$emit('error', this);
 								this.tipWords = '验证失败';
 								setTimeout(() => {
 									this.tipWords = '';
@@ -291,49 +276,48 @@ export default {
 					});
 				} else {
 					//普通滑动
-
-					if (
-						parseInt((this.moveBlockLeft || '').replace('upx', '')) >=
-						parseInt(this.setSize.barWidth) - parseInt(this.barSize.height) - parseInt(this.vOffset)
-					) {
-						this.moveBlockBackgroundColor = '#5cb85c';
-						this.leftBarBorderColor = '#5cb85c';
+					let moveWidth = parseInt((this.moveBlockLeft || '').replace('upx', ''));
+					if (moveWidth === this.slierWidth) {
+						this.sliderBorderColor = '#7ac23c';
 						this.iconColor = '#fff';
 						this.iconClass = 'icon-check';
 						this.showRefresh = false;
-						this.finishText = '验证成功';
+						this.tipsText = '验证成功';
 						this.isEnd = true;
-						this.$parent.$emit('success', this);
+						this.$emit('success', this);
 					} else {
-						this.finishText = '';
-						this.moveBlockBackgroundColor = '#d9534f';
-						this.leftBarBorderColor = '#d9534f';
+						this.sliderBorderColor = 'red';
 						this.iconColor = '#fff';
 						this.iconClass = 'icon-close';
 						this.isEnd = true;
-
-						setTimeout(function() {
-							_this.finishText = '';
-							_this.refresh();
-							_this.isEnd = false;
-						}, 400);
-
-						this.$parent.$emit('error', this);
+						this.$emit('error', this);
+						// 滑块归位
+						const time = setInterval(() => {
+							if (moveWidth === 0) {
+								this.isEnd = false;
+								this.moveBlockLeft = 0;
+								this.sliderBorderColor = '#ddd';
+								this.iconColor = '#fff';
+								this.iconClass = 'icon-right';
+								clearInterval(time);
+							} else {
+								let step = 10;
+								moveWidth < 10 ? (step = 1) : (step = 10);
+								moveWidth -= step;
+								this.leftBarWidth = this.moveBlockLeft = moveWidth + 'px';
+							}
+						}, 50);
 					}
 				}
-
 				this.status = false;
 			}
 		},
 		refresh: function() {
 			this.showRefresh = true;
-			this.finishText = '';
 			this.transitionLeft = 'left .3s';
 			this.moveBlockLeft = 0;
 			this.leftBarWidth = false;
 			this.transitionWidth = 'width .3s';
-			this.leftBarBorderColor = '#ddd';
-			this.moveBlockBackgroundColor = '#fff';
 			this.iconColor = '#000';
 			this.iconClass = 'icon-right';
 			this.getPictrue();
@@ -341,19 +325,8 @@ export default {
 			setTimeout(() => {
 				this.transitionWidth = '';
 				this.transitionLeft = '';
-				this.text = this.explain;
+				this.tipsText = this.explain;
 			}, 300);
-		},
-
-		//获取left值
-		getLeft: function(node) {
-			let leftValue = 0;
-			while (node) {
-				leftValue += node.offsetLeft;
-				node = node.offsetParent;
-			}
-			let finalvalue = leftValue;
-			return finalvalue;
 		},
 
 		// 请求背景图片和验证图片
@@ -373,10 +346,17 @@ export default {
 			});
 		},
 		aesEncrypt(word) {
-			// var key = CryptoJS.enc.Utf8.parse('BGxdEUOZkXka4HSj');
-			// var srcs = CryptoJS.enc.Utf8.parse(word);
-			// var encrypted = CryptoJS.AES.encrypt(srcs, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
-			// return encrypted.toString();
+			const encrypt = new JSEncrypt();
+			try {
+				let publicKey = uni.getStorageSync('publicKey');
+				encrypt.setPublicKey(publicKey);
+				return encrypt.encrypt(word);
+			} catch (e) {
+				console.log(e)
+				// uni.redirectTo({
+				// 	url: '/pages/index/index'
+				// });
+			}
 		}
 	},
 	watch: {
@@ -514,7 +494,8 @@ export default {
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 	border: 1px solid #ddd;
-	-webkit-border-radius: 4px;
+	-webkit-border-radius: 12rpx;
+	/* overflow: hidden; */
 }
 
 .verify-bar-area .verify-move-block {
@@ -527,24 +508,25 @@ export default {
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 	box-shadow: 0 0 2px #888888;
-	-webkit-border-radius: 1px;
-}
-
-.verify-bar-area .verify-move-block:hover {
-	background-color: #337ab7;
-	color: #ffffff;
+	border-top-left-radius: 10rpx;
+	border-bottom-left-radius: 10rpx;
+	border-top-right-radius: 6rpx;
+	border-bottom-right-radius: 6rpx;
 }
 
 .verify-bar-area .verify-left-bar {
 	position: absolute;
 	top: -1px;
 	left: -1px;
-	background: #f0fff0;
+	background: #419041;
 	cursor: pointer;
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
-	border: 1px solid #ddd;
+	border: 1px solid #000;
+	opacity: 0.5;
+	border-top-left-radius: 12rpx;
+	border-bottom-left-radius: 12rpx;
 }
 
 .verify-img-panel {
@@ -552,10 +534,10 @@ export default {
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
-	border-top: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
-	border-radius: 3px;
+	border: 1px solid #ddd;
+	border-radius: 16rpx;
 	position: relative;
+	overflow: hidden;
 }
 
 .verify-img-panel .verify-refresh {
@@ -596,15 +578,6 @@ export default {
 .verify-bar-area .verify-msg {
 	z-index: 3;
 }
-
-/*字体图标的css*/
-/*@font-face {font-family: "iconfont";*/
-/*src: url('../fonts/iconfont.eot?t=1508229193188'); !* IE9*!*/
-/*src: url('../fonts/iconfont.eot?t=1508229193188#iefix') format('embedded-opentype'), !* IE6-IE8 *!*/
-/*url('data:application/x-font-woff;charset=utf-8;base64,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') format('woff'),*/
-/*url('../fonts/iconfont.ttf?t=1508229193188') format('truetype'), !* chrome, firefox, opera, Safari, Android, iOS 4.2+*!*/
-/*url('../fonts/iconfont.svg?t=1508229193188#iconfont') format('svg'); !* iOS 4.1- *!*/
-/*}*/
 
 .iconfont {
 	font-family: 'iconfont' !important;

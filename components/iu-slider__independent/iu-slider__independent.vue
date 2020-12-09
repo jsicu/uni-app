@@ -42,7 +42,7 @@
 					direction="horizontal"
 					@change="startMove"
 				>
-					<image class="icon" src="./right.png" />
+					<image class="icon" src="right.png" />
 				</movable-view>
 			</movable-area>
 

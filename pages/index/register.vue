@@ -39,17 +39,15 @@
 			</view>
 			<iu-button @click="signIn" type="text" size="mini" style="float: right;">已有账号，返回登录</iu-button>
 		</iu-form>
-		<!-- <verifySlider /> -->
-		<iu-verify />
+		<iu-verifyPoint />
 		<iu-slider__independent />
 	</view>
 </template>
 
 <script>
-import verifySlider from '../../components/verifySlider.vue'
 export default {
 	name: '',
-	components: { verifySlider },
+	components: { },
 	data() {
 		return {
 			loading: false,

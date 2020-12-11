@@ -113,7 +113,11 @@ export default {
 			showRefresh: true,
 			bindingClick: true,
 			imgLeft: '',
-			imgTop: ''
+			imgTop: '',
+			original:{
+				width: 310,
+				height: 155
+			} // 图像原始尺寸
 		};
 	},
 	computed: {
@@ -126,8 +130,7 @@ export default {
 			this.num = 1;
 			this.getPictrue();
 			this.$nextTick(() => {
-				this.refresh();
-				this.$parent.$emit('ready', this);
+				this.$emit('ready', this);
 			});
 		},
 		canvasClick(e) {
@@ -135,16 +138,15 @@ export default {
 			query
 				.select('#image')
 				.boundingClientRect(data => {
-					console.log(data);
 					this.imgLeft = Math.ceil(data.left);
 					this.imgTop = Math.ceil(data.top);
 					this.checkPosArr.push(this.getMousePos(this.$refs.canvas, e));
 					if (this.num == this.checkNum) {
 						this.num = this.createPoint(this.getMousePos(this.$refs.canvas, e));
-						console.log(this.checkPosArr, 'this.checkPosArr');
+						console.log(JSON.stringify(this.checkPosArr))
 						//按比例转换坐标值
 						this.checkPosArr = this.pointTransfrom(this.checkPosArr, this.imgSize);
-						console.log(this.checkPosArr, 'this.checkPosArr');
+						console.log(JSON.stringify(this.checkPosArr))
 						//等创建坐标执行完
 						setTimeout(() => {
 							//发送后端请求
@@ -161,7 +163,7 @@ export default {
 										this.barAreaColor = '#4cae4c';
 										this.barAreaBorderColor = '#5cb85c';
 										this.text = '验证成功';
-										this.showRefresh = false;
+										this.showRefresh = true;
 										this.bindingClick = false;
 										this.$emit('success', true);
 									} else {
@@ -220,14 +222,15 @@ export default {
 				success: result => {
 					this.pointBackImgBase = result.bgCanvas;
 					this.text = '请依次点击【' + result.words + '】';
+					this.original = result.size
 				}
 			});
 		},
 		//坐标转换函数
 		pointTransfrom(pointArr, imgSize) {
-			var newPointArr = pointArr.map(p => {
-				let x = Math.round((310 * p.x) / parseInt(imgSize.width));
-				let y = Math.round((155 * p.y) / parseInt(imgSize.height));
+			let newPointArr = pointArr.map(p => {
+				let x = Math.round((this.original.width * p.x) / parseInt(imgSize.width));
+				let y = Math.round((this.original.height * p.y) / parseInt(imgSize.height));
 				return { x, y };
 			});
 			// console.log(newPointArr,"newPointArr");

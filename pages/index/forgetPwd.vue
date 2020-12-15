@@ -28,10 +28,6 @@
 					<iu-button @click="getVerificationCode" type="text" size="mini" style="width: 160rpx;">获取验证码</iu-button>
 				</view>
 			</iu-formItem>
-			<iu-formItem label="验证码:">
-				<mySlider @success=" () => { formData.slider = true; } "
-				></mySlider>
-			</iu-formItem>
 			<view style="text-align: center;">
 				<iu-button @click="handleRegister" type="primary" style="width: 100%;" :loading="loading">确定</iu-button>
 			</view>
@@ -52,10 +48,9 @@
 </template>
 
 <script>
-import mySlider from '@/components/Slider.vue';
 export default {
 	name: '',
-	components: { mySlider },
+	components: { },
 	data() {
 		return {
 			dialogVisible: false,

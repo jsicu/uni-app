@@ -34,7 +34,7 @@ module.exports = (params) => {
 			});
 		}
 	// }
-	console.log(header, url)
+	// console.log(header, url)
 	//	发起请求 加载动画
 	if (!params.hideLoading) {
 		uni.showLoading({

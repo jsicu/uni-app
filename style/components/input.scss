@@ -1,0 +1,11 @@
+@charset "UTF-8";
+@import '../common/var';
+@import '../mixins/mixins';
+
+@include b(input) {
+	height: $--height-base;
+	line-height: $--height-base;
+	@include m(placeholder) {
+		font-size: $--font-size-base;
+	}
+}

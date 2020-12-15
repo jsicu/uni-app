@@ -4,11 +4,11 @@
  * @Date: 2020-12-9 17:25:55
  * @lastAuthor:
  * @lastChangeDate:
- * @description: 点击文字验证组件
+ * @description: 点击文字验证组件（需后端支持）
+ * @unfinish：样式同意太累了，等闲了再说
  */
 -->
 <template>
-	<!-- <view :style="{ inlineStyle }"> -->
 		<view style="position: relative">
 			<view class="verify-image-out">
 				<view
@@ -55,7 +55,6 @@
 				<text class="verify-msg">{{ text }}</text>
 			</view>
 		</view>
-	<!-- </view> -->
 </template>
 <script type="text/babel">
 /**
@@ -108,8 +107,8 @@ export default {
 			pointBackImgBase: '',
 			tempPoints: [],
 			text: '',
-			barAreaColor: '#fff',
-			barAreaBorderColor: '#fff',
+			barAreaColor: '#000',
+			barAreaBorderColor: '#ddd',
 			showRefresh: true,
 			bindingClick: true,
 			imgLeft: '',
@@ -143,10 +142,10 @@ export default {
 					this.checkPosArr.push(this.getMousePos(this.$refs.canvas, e));
 					if (this.num == this.checkNum) {
 						this.num = this.createPoint(this.getMousePos(this.$refs.canvas, e));
-						console.log(JSON.stringify(this.checkPosArr))
+						// console.log(JSON.stringify(this.checkPosArr))
 						//按比例转换坐标值
 						this.checkPosArr = this.pointTransfrom(this.checkPosArr, this.imgSize);
-						console.log(JSON.stringify(this.checkPosArr))
+						// console.log(JSON.stringify(this.checkPosArr))
 						//等创建坐标执行完
 						setTimeout(() => {
 							//发送后端请求
@@ -163,7 +162,7 @@ export default {
 										this.barAreaColor = '#4cae4c';
 										this.barAreaBorderColor = '#5cb85c';
 										this.text = '验证成功';
-										this.showRefresh = true;
+										this.showRefresh = false;
 										this.bindingClick = false;
 										this.$emit('success', true);
 									} else {
@@ -213,10 +212,10 @@ export default {
 		// 请求背景图片和验证图片
 		getPictrue() {
 			const data = {
-				captchaType: 1
+				type: 1
 			};
 			this.$network({
-				url: `image/verify/point`, //仅为示例，并非真实接口地址。
+				url: `image/verify`, //仅为示例，并非真实接口地址。
 				data,
 				method: 'get',
 				success: result => {
@@ -233,7 +232,6 @@ export default {
 				let y = Math.round((this.original.height * p.y) / parseInt(imgSize.height));
 				return { x, y };
 			});
-			// console.log(newPointArr,"newPointArr");
 			return newPointArr;
 		}
 	},
@@ -281,7 +279,7 @@ export default {
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
 	border: 1px solid #ddd;
-	-webkit-border-radius: 4px;
+	-webkit-border-radius: 12rpx;
 }
 
 .verify-image-panel {
@@ -291,8 +289,9 @@ export default {
 	box-sizing: content-box;
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
-	border-radius: 3px;
+	border-radius: 16rpx;
 	position: relative;
+	overflow: hidden;
 }
 
 .verify-image-panel .verify-refresh {

@@ -14,7 +14,6 @@
 			<view class="verify-img-panel" :style="{ width: imgSize.width, height: imgSize.height }">
 				<image :src="backImgBase" alt="" style="width:100%;height:100%;display:block" />
 				<view class="verify-refresh" @click="refresh" v-show="showRefresh"><text class="iconfont icon-refresh" /></view>
-				<!-- iu-slider-success -->
 				<transition name="tips">
 					<text class="verify-tips" v-if="tipWords" :style="{ 'background-color': tipsBackColor }">{{ tipWords }}</text>
 				</transition>
@@ -308,7 +307,7 @@ export default {
 		// 请求背景图片和验证图片
 		getPictrue() {
 			this.$network({
-				url: `image/verify/puzzle`, //仅为示例，并非真实接口地址。
+				url: `image/verify`, //仅为示例，并非真实接口地址。
 				method: 'GET',
 				success: res => {
 					this.backImgBase = res.sliderBG;
@@ -362,7 +361,6 @@ export default {
 	box-sizing: content-box;
 	border: 1px solid #ddd;
 	-webkit-border-radius: 12rpx;
-	/* overflow: hidden; */
 }
 
 .verify-bar-area .verify-move-block {

@@ -6,9 +6,9 @@
 		<view style="margin: 0 10px;">
 			<iu-verifyPoint  @ready="ready" />
 		</view>
-		<!-- <view style="margin: 0 10px;">
+		<view style="margin: 0 10px;">
 			<iu-verifySlider type="2" @ready="ready" />
-		</view> -->
+		</view>
 		<input v-model="value" auto-focus placeholder="将会获取焦点" />
 		<iu-slider__independent />
 	</view>

@@ -18,8 +18,8 @@ export function rsaEncrypt(word) {
 	try {
 		let publicKey = uni.getStorageSync('publicKey');
 		encrypt.setPublicKey(publicKey);
-		return JSON.stringify(word)
-		// return encrypt.encrypt(JSON.stringify(word));
+		return JSON.stringify(word) // 原文返回
+		// return encrypt.encrypt(JSON.stringify(word)); // 加密返回
 	} catch (e) {
 		uni.redirectTo({
 			url: '/pages/index/index'
